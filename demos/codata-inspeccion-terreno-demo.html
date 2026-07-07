@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inspección de Terreno · Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --accent:#EA580C;--accent-2:#F97A3D;--accent-ink:#fff;--wa:#25D366;--ok:#2E9E66;--warn:#E0A53B;--na:#9AA3AF;
+    --ink:#1A140F;--muted:#857A70;--line:#ECE4DC;--surface:#F7F2EC;--card:#fff;
+    --display:"Bricolage Grotesque",system-ui,sans-serif;--body:"Inter",system-ui,sans-serif;--mono:"JetBrains Mono",monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:var(--body);color:var(--ink);background:var(--surface);-webkit-font-smoothing:antialiased}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  input{font-family:inherit}
+  .shell{max-width:620px;margin:0 auto;padding:24px 20px 50px}
+  .top{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+  .logo{display:flex;align-items:center;gap:11px}
+  .logo .m{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#fff;font-family:var(--display);font-weight:800;font-size:18px}
+  .logo b{font-family:var(--display);font-size:20px;display:block;line-height:1}.logo span{font-size:11.5px;color:var(--muted)}
+  .controls{margin-left:auto;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .ti{height:36px;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:0 11px;font-size:13px;width:120px;outline:none}
+  .swatches{display:flex;gap:6px}.sw{width:22px;height:22px;border-radius:999px;border:2px solid transparent}.sw.active{border-color:var(--ink);transform:scale(1.1)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 10px 30px rgba(20,18,30,.06)}
+  .head{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;padding:18px 20px;display:flex;align-items:center;gap:16px;transition:background .35s}
+  .head .t{flex:1}.head .t b{font-family:var(--display);font-weight:800;font-size:18px;display:block}.head .t span{font-size:12px;opacity:.9}
+  .ring{position:relative;width:56px;height:56px;flex:0 0 auto}
+  .ring svg{width:56px;height:56px;transform:rotate(-90deg)}
+  .ring .pc{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:14px}
+  .body{padding:10px 0}
+  .it{padding:14px 20px;border-bottom:1px solid var(--line)}
+  .it .q{font-size:14px;font-weight:600;margin-bottom:10px}
+  .opts{display:flex;gap:8px}
+  .opts button{flex:1;height:38px;border:1px solid var(--line);border-radius:10px;font-size:12.5px;font-weight:600;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:5px;transition:.12s}
+  .opts button.ok.on{background:var(--ok);color:#fff;border-color:var(--ok)}
+  .opts button.obs.on{background:var(--warn);color:#fff;border-color:var(--warn)}
+  .opts button.na.on{background:var(--na);color:#fff;border-color:var(--na)}
+  .photo{margin-top:9px;height:36px;border:1px dashed var(--line);border-radius:9px;font-size:12.5px;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:7px;width:100%}
+  .photo.on{border-style:solid;border-color:var(--ok);color:var(--ok)}
+  .photo svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8}
+  .sign{padding:16px 20px}
+  .sign .l{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:9px;display:flex;justify-content:space-between}
+  .sign .l button{font-size:12px;color:var(--accent);font-weight:600}
+  canvas{width:100%;height:120px;border:1px solid var(--line);border-radius:12px;background:var(--surface);touch-action:none;display:block}
+  .foot{padding:16px 20px 20px}
+  .wabtn{height:50px;border-radius:13px;background:var(--wa);color:#fff;font-weight:700;font-size:15px;width:100%;display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:8px}
+  .wabtn svg{width:18px;height:18px;fill:#fff}.wabtn:disabled{opacity:.45;cursor:not-allowed}
+  .dlbtn{height:44px;border-radius:11px;background:var(--surface);border:1px solid var(--line);font-weight:600;font-size:13.5px;width:100%}
+  .credit{text-align:center;font-size:12px;color:var(--muted);margin-top:18px}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="top">
+    <div class="logo"><div class="m" id="lm">V</div><div><b id="bl">Verifica</b><span>Inspección de terreno · demo</span></div></div>
+    <div class="controls"><input class="ti" id="ib" value="Verifica" maxlength="16"><div class="swatches" id="sw"></div></div>
+  </div>
+
+  <div class="card">
+    <div class="head">
+      <div class="t"><b id="bizName">Verifica</b><span>Checklist de inspección · Frente Norte</span></div>
+      <div class="ring"><svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="24" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="5"/><circle id="ringFill" cx="28" cy="28" r="24" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="150.8" style="transition:stroke-dashoffset .4s"/></svg><div class="pc" id="ringPct">0%</div></div>
+    </div>
+    <div class="body" id="items"></div>
+    <div class="sign">
+      <div class="l"><span>Firma del responsable</span><button id="clr">Borrar</button></div>
+      <canvas id="sig"></canvas>
+    </div>
+    <div class="foot">
+      <button class="wabtn" id="wa" disabled><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-8.6 15l-1.4 5 5.2-1.4A10 10 0 1012 2z"/></svg> Enviar reporte por WhatsApp</button>
+      <button class="dlbtn" id="dl">⬇ Descargar reporte</button>
+    </div>
+  </div>
+  <div class="credit">Demo interactiva · solución re-skineable · checklist de ejemplo</div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  function $(s){return document.querySelector(s);}
+  var brand="Verifica";
+  var items=[
+    {q:"¿EPP completo del personal?",st:null,photo:false},
+    {q:"¿Señalización y demarcación correcta?",st:null,photo:false},
+    {q:"¿Equipos con inspección vigente?",st:null,photo:false},
+    {q:"¿Área de trabajo ordenada y limpia?",st:null,photo:false},
+    {q:"¿Extintores accesibles y cargados?",st:null,photo:false},
+    {q:"¿Permisos de trabajo en regla?",st:null,photo:false}
+  ];
+  var stOpts=[["ok","✓ OK"],["obs","⚠ Obs."],["na","– N/A"]];
+
+  function render(){
+    $("#items").innerHTML=items.map(function(it,i){
+      return '<div class="it"><div class="q">'+(i+1)+'. '+it.q+'</div><div class="opts">'+
+        stOpts.map(function(o){return '<button class="'+o[0]+(it.st===o[0]?" on":"")+'" data-i="'+i+'" data-s="'+o[0]+'">'+o[1]+'</button>';}).join("")+
+        '</div><button class="photo'+(it.photo?" on":"")+'" data-ph="'+i+'"><svg viewBox="0 0 24 24"><path d="M4 7h3l2-2h6l2 2h3v12H4zM12 16a3.5 3.5 0 100-7 3.5 3.5 0 000 7z"/></svg>'+(it.photo?"Foto adjunta":"Adjuntar foto")+'</button></div>';
+    }).join("");
+    [].slice.call($("#items").querySelectorAll("[data-s]")).forEach(function(b){b.onclick=function(){items[+b.dataset.i].st=b.dataset.s;render();};});
+    [].slice.call($("#items").querySelectorAll("[data-ph]")).forEach(function(b){b.onclick=function(){var it=items[+b.dataset.ph];it.photo=!it.photo;render();};});
+    var done=items.filter(function(i){return i.st;}).length,pct=Math.round(done/items.length*100);
+    $("#ringPct").textContent=pct+"%";$("#ringFill").style.strokeDashoffset=150.8*(1-pct/100);
+    $("#wa").disabled=done<items.length;
+  }
+
+  // signature
+  var c=$("#sig"),cx=c.getContext("2d"),drawing=false,dpr=Math.min(window.devicePixelRatio||1,2);
+  function sz(){var r=c.getBoundingClientRect();c.width=r.width*dpr;c.height=r.height*dpr;cx.setTransform(dpr,0,0,dpr,0,0);cx.lineWidth=2.2;cx.lineCap="round";cx.strokeStyle="#1A140F";}
+  function pos(e){var r=c.getBoundingClientRect();var t=e.touches?e.touches[0]:e;return {x:t.clientX-r.left,y:t.clientY-r.top};}
+  function down(e){drawing=true;var p=pos(e);cx.beginPath();cx.moveTo(p.x,p.y);e.preventDefault();}
+  function move(e){if(!drawing)return;var p=pos(e);cx.lineTo(p.x,p.y);cx.stroke();e.preventDefault();}
+  function up(){drawing=false;}
+  c.addEventListener("mousedown",down);c.addEventListener("mousemove",move);window.addEventListener("mouseup",up);
+  c.addEventListener("touchstart",down,{passive:false});c.addEventListener("touchmove",move,{passive:false});c.addEventListener("touchend",up);
+  $("#clr").onclick=function(){cx.clearRect(0,0,c.width,c.height);};
+
+  function report(){
+    var lbl={ok:"OK",obs:"OBSERVACIÓN",na:"N/A"};
+    return "REPORTE DE INSPECCIÓN · "+brand+"\nFrente Norte · "+new Date().toLocaleDateString("es-CL")+"\n\n"+
+      items.map(function(it,i){return (i+1)+". "+it.q+" → "+(lbl[it.st]||"—")+(it.photo?" [con foto]":"");}).join("\n")+
+      "\n\nObservaciones: "+items.filter(function(i){return i.st==="obs";}).length+" · Firmado por responsable.";
+  }
+  $("#wa").onclick=function(){window.open("https://wa.me/?text="+encodeURIComponent(report()),"_blank");};
+  $("#dl").onclick=function(){var b=new Blob([report()],{type:"text/plain"}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="inspeccion.txt";document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);};
+
+  var SW=[{c:"#EA580C",c2:"#F97A3D"},{c:"#2563EB",c2:"#5B8DEF"},{c:"#0D9488",c2:"#2DD4BF"},{c:"#7C3AED",c2:"#A855F7"},{c:"#16161A",c2:"#444"}];
+  function ac(o){document.documentElement.style.setProperty("--accent",o.c);document.documentElement.style.setProperty("--accent-2",o.c2);
+    var h=o.c.replace("#",""),r=parseInt(h.substr(0,2),16),g=parseInt(h.substr(2,2),16),b=parseInt(h.substr(4,2),16);
+    document.documentElement.style.setProperty("--accent-ink",(0.299*r+0.587*g+0.114*b)>150?"#1A140F":"#fff");
+    [].slice.call(document.querySelectorAll(".sw")).forEach(function(e){e.classList.toggle("active",e.dataset.c===o.c);});}
+  function bsw(){var s=$("#sw");s.innerHTML="";SW.forEach(function(o){var b=document.createElement("button");b.className="sw";b.style.background=o.c;b.dataset.c=o.c;b.onclick=function(){ac(o);};s.appendChild(b);});}
+  function ab(n){brand=n||"Marca";$("#bl").textContent=brand;$("#lm").textContent=brand.charAt(0).toUpperCase();$("#bizName").textContent=brand;}
+  $("#ib").addEventListener("input",function(e){ab(e.target.value);});
+  bsw();ac(SW[0]);ab("Verifica");render();sz();window.addEventListener("resize",sz);
+})();
+</script>
+</body>
+</html>

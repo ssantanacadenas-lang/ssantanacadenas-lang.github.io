@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Screening de Licitaciones · Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --accent:#0F766E;--accent-2:#14B8A6;--accent-ink:#fff;--ok:#22C55E;--warn:#E0A53B;--bad:#EF4444;
+    --ink:#E8F1EF;--muted:#85988F;--line:#1F302C;--card:#13201D;--bg:#08110E;
+    --display:"Bricolage Grotesque",system-ui,sans-serif;--body:"Inter",system-ui,sans-serif;--mono:"JetBrains Mono",monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:var(--body);color:var(--ink);
+    background:radial-gradient(85% 60% at 50% 0%,color-mix(in srgb,var(--accent) 22%,transparent),transparent 58%),var(--bg);
+    min-height:100vh;-webkit-font-smoothing:antialiased}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  textarea{font-family:inherit}input{font-family:inherit}
+  .shell{max-width:840px;margin:0 auto;padding:24px 20px 50px}
+  .top{display:flex;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+  .logo{display:flex;align-items:center;gap:11px}
+  .logo .m{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#fff;font-family:var(--display);font-weight:800;font-size:18px}
+  .logo b{font-family:var(--display);font-size:20px;color:#fff;display:block;line-height:1}.logo span{font-size:11.5px;color:var(--muted)}
+  .controls{margin-left:auto;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .ti{height:36px;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:0 11px;font-size:13px;width:120px;outline:none;color:#fff}
+  .swatches{display:flex;gap:6px}.sw{width:22px;height:22px;border-radius:999px;border:2px solid transparent}.sw.active{border-color:#fff;transform:scale(1.1)}
+  .lead{margin:0 0 16px}.lead h1{font-family:var(--display);font-weight:800;font-size:clamp(23px,3.2vw,32px);letter-spacing:-.02em;margin:0 0 5px;color:#fff}
+  .lead p{font-size:14.5px;color:var(--muted);margin:0;max-width:60ch}
+  .io{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;align-items:flex-start}
+  textarea{flex:1;min-width:240px;min-height:90px;background:var(--card);border:1px solid var(--line);border-radius:13px;padding:13px;font-size:13px;color:var(--ink);outline:none;resize:vertical;line-height:1.5}
+  textarea:focus{border-color:var(--accent)}
+  .iob{display:flex;flex-direction:column;gap:8px}
+  .btn{height:48px;padding:0 22px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;font-weight:700;font-size:14.5px;display:inline-flex;align-items:center;justify-content:center;gap:9px;transition:filter .15s}
+  .btn:hover{filter:brightness(1.08)}.btn:disabled{opacity:.5}
+  .btn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.9}
+  .btn-g{background:var(--card);border:1px solid var(--line);color:var(--ink);height:48px;padding:0 16px;border-radius:12px;font-size:13px;font-weight:600}
+  .result{display:none}.result.on{display:block;animation:f .3s ease}@keyframes f{from{opacity:0;transform:translateY(8px)}to{opacity:1}}
+  .verdict{display:flex;align-items:center;gap:16px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin-bottom:14px}
+  .verdict .vbig{width:70px;height:70px;border-radius:16px;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:14px;text-align:center;line-height:1.1;flex:0 0 auto;color:#fff}
+  .verdict .vt{flex:1}.verdict .vt b{font-family:var(--display);font-size:18px;color:#fff;display:block}.verdict .vt span{font-size:13px;color:var(--muted)}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:640px){.cols{grid-template-columns:1fr}}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+  .ph{padding:12px 16px;border-bottom:1px solid var(--line);font-family:var(--display);font-size:14px;color:#fff}
+  .pb{padding:14px 16px}
+  .kv{display:flex;justify-content:space-between;gap:10px;font-size:13px;padding:7px 0;border-bottom:1px dashed var(--line)}.kv:last-child{border:none}
+  .kv .k{color:var(--muted)}.kv .v{font-weight:600;text-align:right;color:#fff}
+  .li{display:flex;gap:9px;font-size:13px;line-height:1.4;padding:7px 0;border-bottom:1px solid var(--line)}.li:last-child{border:none}
+  .skel{height:14px;background:linear-gradient(90deg,var(--card),var(--line),var(--card));background-size:200% 100%;border-radius:6px;animation:sh 1.2s infinite;margin-bottom:11px}@keyframes sh{to{background-position:-200% 0}}
+  .credit{text-align:center;font-size:12px;color:var(--muted);margin-top:22px}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="top">
+    <div class="logo"><div class="m" id="lm">L</div><div><b id="bl">Licita</b><span>Screening de licitaciones · demo</span></div></div>
+    <div class="controls"><input class="ti" id="ib" value="Licita" maxlength="16"><div class="swatches" id="sw"></div></div>
+  </div>
+  <div class="lead"><h1>¿Postular o no? La IA lo decide contigo</h1>
+    <p>Pega las bases de una licitación y la IA te extrae lo clave, evalúa si te conviene postular y lista requisitos y riesgos.</p></div>
+
+  <div class="io">
+    <textarea id="txt" spellcheck="false"></textarea>
+    <div class="iob"><button class="btn-g" id="ex">Cargar ejemplo</button><button class="btn" id="go"><svg viewBox="0 0 24 24"><path d="M11 4a7 7 0 100 14 7 7 0 000-14zM21 21l-4.3-4.3"/></svg> Analizar</button></div>
+  </div>
+
+  <div class="result" id="result">
+    <div class="verdict"><div class="vbig" id="vbig">—</div><div class="vt"><b id="vtitle">Evaluación</b><span id="vsub"></span></div></div>
+    <div class="cols">
+      <div class="panel"><div class="ph">📋 Datos clave</div><div class="pb" id="datos"></div></div>
+      <div class="panel"><div class="ph">✅ Requisitos</div><div class="pb" id="reqs"></div></div>
+      <div class="panel"><div class="ph">⚠️ Riesgos</div><div class="pb" id="risks"></div></div>
+      <div class="panel"><div class="ph">💡 Recomendación</div><div class="pb" id="reco" style="font-size:13.5px;line-height:1.55"></div></div>
+    </div>
+  </div>
+  <div class="credit">Demo interactiva · solución re-skineable · IA real</div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  function $(s){return document.querySelector(s);}
+  function esc(s){return String(s).replace(/[&<>]/g,function(m){return {"&":"&amp;","<":"&lt;",">":"&gt;"}[m];});}
+  var example="LICITACIÓN PÚBLICA N°4521-2026\nObjeto: Servicio de inspección y certificación de equipos de izaje para faena minera.\nMandante: Compañía Minera del Norte.\nPlazo de ejecución: 12 meses.\nPresupuesto referencial: $180.000.000.\nRequisitos: experiencia mínima 3 años en faenas mineras, personal certificado en altura, certificación ISO 9001, boleta de garantía 5%.\nCierre de ofertas: 15 días corridos. Visita a terreno obligatoria.";
+  $("#txt").value=example;$("#ex").onclick=function(){$("#txt").value=example;};
+
+  $("#go").onclick=function(){
+    var t=$("#txt").value.trim();if(!t){$("#txt").focus();return;}
+    $("#go").disabled=true;var r=$("#result");r.classList.add("on");
+    ["datos","reqs","risks","reco"].forEach(function(id){$("#"+id).innerHTML='<div class="skel"></div><div class="skel" style="width:80%"></div>';});
+    $("#vbig").textContent="…";$("#vtitle").textContent="Analizando…";$("#vsub").textContent="";
+    var sys="Eres analista de licitaciones. Lee las bases y responde SOLO JSON válido sin markdown, forma exacta:\n"+
+      '{"veredicto":"GO|NO-GO|REVISAR","ajuste":"alto|medio|bajo","resumen":"...","datos":[{"k":"...","v":"..."}],"requisitos":["..."],"riesgos":["..."],"recomendacion":"..."}\n'+
+      "datos: 4-6 pares clave (mandante, plazo, presupuesto, cierre, garantía...). requisitos: lista de exigencias. riesgos: 2-4. veredicto: GO si conviene, NO-GO si no califica, REVISAR si dudoso. ajuste = qué tan bien calza. Español de Chile, conciso.";
+    fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:1000,system:sys,messages:[{role:"user",content:t}]})
+    }).then(function(r){return r.json();}).then(function(d){
+      var raw="";if(d&&d.content)raw=d.content.filter(function(i){return i.type==="text";}).map(function(i){return i.text;}).join("").trim();
+      raw=raw.replace(/```json|```/g,"").trim();show(JSON.parse(raw));
+    }).catch(function(){$("#vtitle").textContent="No se pudo analizar";$("#vsub").textContent="Reintenta en unos segundos.";["datos","reqs","risks","reco"].forEach(function(id){$("#"+id).innerHTML="—";});}).then(function(){$("#go").disabled=false;});
+  };
+  function show(o){
+    var v=(o.veredicto||"REVISAR").toUpperCase();
+    var col=v==="GO"?"var(--ok)":v==="NO-GO"?"var(--bad)":"var(--warn)";
+    $("#vbig").style.background=col;$("#vbig").textContent=v;
+    $("#vtitle").textContent=v==="GO"?"Conviene postular":v==="NO-GO"?"Mejor no postular":"Revisar con cuidado";
+    $("#vsub").textContent=(o.resumen||"")+(o.ajuste?" · Calce "+o.ajuste:"");
+    $("#datos").innerHTML=(o.datos||[]).map(function(x){return '<div class="kv"><span class="k">'+esc(x.k)+'</span><span class="v">'+esc(x.v)+'</span></div>';}).join("")||"—";
+    $("#reqs").innerHTML=(o.requisitos||[]).map(function(x){return '<div class="li">✓ '+esc(x)+'</div>';}).join("")||"—";
+    $("#risks").innerHTML=(o.riesgos||[]).map(function(x){return '<div class="li">⚠ '+esc(x)+'</div>';}).join("")||"—";
+    $("#reco").textContent=o.recomendacion||"";
+  }
+
+  var SW=[{c:"#0F766E",c2:"#14B8A6"},{c:"#2563EB",c2:"#5B8DEF"},{c:"#7C3AED",c2:"#A855F7"},{c:"#C2410C",c2:"#EA7A3C"},{c:"#16161A",c2:"#444"}];
+  function ac(o){document.documentElement.style.setProperty("--accent",o.c);document.documentElement.style.setProperty("--accent-2",o.c2);
+    var h=o.c.replace("#",""),r=parseInt(h.substr(0,2),16),g=parseInt(h.substr(2,2),16),b=parseInt(h.substr(4,2),16);
+    document.documentElement.style.setProperty("--accent-ink",(0.299*r+0.587*g+0.114*b)>150?"#08110E":"#fff");
+    [].slice.call(document.querySelectorAll(".sw")).forEach(function(e){e.classList.toggle("active",e.dataset.c===o.c);});}
+  function bsw(){var s=$("#sw");s.innerHTML="";SW.forEach(function(o){var b=document.createElement("button");b.className="sw";b.style.background=o.c;b.dataset.c=o.c;b.onclick=function(){ac(o);};s.appendChild(b);});}
+  function ab(n){$("#bl").textContent=n||"Marca";$("#lm").textContent=(n||"M").charAt(0).toUpperCase();}
+  $("#ib").addEventListener("input",function(e){ab(e.target.value);});
+  bsw();ac(SW[0]);ab("Licita");
+})();
+</script>
+</body>
+</html>

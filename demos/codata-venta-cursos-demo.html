@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cursos Online · Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --accent:#4338CA;--accent-2:#6D62E0;--accent-ink:#fff;--ok:#16A34A;--gold:#E0A53B;
+    --ink:#14131F;--muted:#777589;--line:#E7E5F0;--surface:#F4F3FA;--card:#fff;--bg:#0D0B1A;
+    --display:"Bricolage Grotesque",system-ui,sans-serif;--body:"Inter",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:var(--body);color:var(--ink);background:var(--surface);-webkit-font-smoothing:antialiased}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}input{font-family:inherit}
+  .shell{max-width:960px;margin:0 auto;padding:24px 20px 50px}
+  .top{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+  .logo{display:flex;align-items:center;gap:11px}
+  .logo .m{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#fff;font-family:var(--display);font-weight:800;font-size:18px}
+  .logo b{font-family:var(--display);font-size:20px;display:block;line-height:1}.logo span{font-size:11.5px;color:var(--muted)}
+  .controls{margin-left:auto;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .ti{height:36px;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:0 11px;font-size:13px;width:120px;outline:none}
+  .swatches{display:flex;gap:6px}.sw{width:22px;height:22px;border-radius:999px;border:2px solid transparent}.sw.active{border-color:var(--ink);transform:scale(1.1)}
+  .course{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 10px 30px rgba(20,18,30,.06)}
+  .ch{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;padding:22px 24px;transition:background .35s}
+  .ch .kick{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.85}
+  .ch h1{font-family:var(--display);font-weight:800;font-size:clamp(20px,3vw,26px);margin:4px 0 10px}
+  .ch .pbar{height:8px;background:rgba(255,255,255,.25);border-radius:999px;overflow:hidden}.ch .pbar .f{height:100%;background:#fff;border-radius:999px;transition:width .5s}
+  .ch .pt{font-size:12px;opacity:.9;margin-top:6px}
+  .body{display:grid;grid-template-columns:260px 1fr;gap:0}
+  @media(max-width:680px){.body{grid-template-columns:1fr}}
+  .les{border-right:1px solid var(--line)}
+  @media(max-width:680px){.les{border-right:none;border-bottom:1px solid var(--line)}}
+  .lr{display:flex;align-items:center;gap:11px;padding:13px 18px;border-bottom:1px solid var(--line);cursor:pointer;transition:.12s}
+  .lr:last-child{border:none}.lr:hover{background:var(--surface)}.lr.on{background:color-mix(in srgb,var(--accent) 8%,transparent)}
+  .lr .ck{width:24px;height:24px;border-radius:999px;border:2px solid var(--line);flex:0 0 auto;display:grid;place-items:center;font-size:12px}
+  .lr.done .ck{background:var(--ok);border-color:var(--ok);color:#fff}
+  .lr .t{flex:1}.lr .t b{font-size:13px;display:block}.lr .t span{font-size:11px;color:var(--muted)}
+  .player{padding:22px}
+  .screen{aspect-ratio:16/9;background:var(--ink);border-radius:14px;display:grid;place-items:center;margin-bottom:16px;position:relative;overflow:hidden}
+  .screen .play{width:64px;height:64px;border-radius:999px;background:rgba(255,255,255,.15);display:grid;place-items:center;backdrop-filter:blur(4px)}
+  .screen .play svg{width:26px;height:26px;fill:#fff;margin-left:3px}
+  .screen .lbl{position:absolute;bottom:12px;left:14px;color:#fff;font-size:13px;font-weight:600}
+  .player h2{font-family:var(--display);font-size:19px;margin:0 0 6px}
+  .player p{font-size:13.5px;color:var(--muted);line-height:1.5;margin:0 0 16px}
+  .quiz{background:var(--surface);border-radius:14px;padding:16px;margin-bottom:16px}
+  .quiz .q{font-size:14px;font-weight:600;margin-bottom:11px}
+  .quiz .opt{display:block;width:100%;text-align:left;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:11px 13px;font-size:13.5px;margin-bottom:8px;transition:.12s}
+  .quiz .opt:hover{border-color:var(--accent)}.quiz .opt.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 10%,transparent)}.quiz .opt.bad{border-color:#DC2626;background:color-mix(in srgb,#DC2626 8%,transparent)}
+  .btn{height:48px;border-radius:12px;background:var(--accent);color:#fff;font-weight:700;font-size:14px;width:100%;transition:filter .15s}.btn:hover{filter:brightness(1.08)}
+  .cert{text-align:center;padding:10px 0}
+  .cert .award{width:72px;height:72px;border-radius:999px;background:color-mix(in srgb,var(--gold) 16%,transparent);display:grid;place-items:center;font-size:34px;margin:0 auto 10px}
+  .cert h2{font-family:var(--display);font-size:21px;margin:0 0 4px}.cert p{font-size:13px;color:var(--muted);margin:0 0 14px}
+  .certbox{border:2px solid var(--gold);border-radius:14px;padding:18px;margin-bottom:14px}
+  .certbox .ct{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .certbox .nm{font-family:var(--display);font-weight:800;font-size:20px;margin:6px 0}
+  .certbox .co{font-size:13px;color:var(--muted)}.certbox .code{font-family:monospace;font-size:11px;color:var(--muted);margin-top:8px}
+  .credit{text-align:center;font-size:12px;color:var(--muted);margin-top:18px}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="top">
+    <div class="logo"><div class="m" id="lm">A</div><div><b id="bl">Aprende</b><span>Cursos online · demo</span></div></div>
+    <div class="controls"><input class="ti" id="ib" value="Aprende" maxlength="16"><div class="swatches" id="sw"></div></div>
+  </div>
+
+  <div class="course">
+    <div class="ch"><div class="kick" id="kick">Aprende · Curso certificado</div><h1>Prevención de riesgos en faena</h1><div class="pbar"><div class="f" id="pf" style="width:0"></div></div><div class="pt" id="pt">0% completado</div></div>
+    <div class="body">
+      <div class="les" id="les"></div>
+      <div class="player" id="player"></div>
+    </div>
+  </div>
+  <div class="credit">Demo interactiva · solución re-skineable · curso de ejemplo</div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  function $(s){return document.querySelector(s);}
+  var brand="Aprende";
+  var lessons=[
+    {t:"Introducción a la prevención",d:"Conceptos base, marco legal y por qué importa la seguridad en toda faena.",done:false},
+    {t:"Identificación de peligros",d:"Cómo reconocer condiciones y actos inseguros en el día a día.",done:false},
+    {t:"Uso correcto de EPP",d:"Elementos de protección personal: cuándo, cómo y por qué usarlos.",done:false},
+    {t:"Trabajo en altura",d:"Medidas y resguardos para tareas sobre 1,8 metros.",done:false,quiz:{q:"¿A partir de qué altura se considera trabajo en altura?",o:["0,5 m","1,8 m","5 m"],a:1}},
+    {t:"Evaluación final",d:"Pon a prueba lo aprendido y obtén tu certificado.",done:false,quiz:{q:"El EPP es la primera medida de control que debemos priorizar.",o:["Verdadero","Falso"],a:1}}
+  ];
+  var cur=0;
+  function prog(){var d=lessons.filter(function(l){return l.done;}).length,p=Math.round(d/lessons.length*100);$("#pf").style.width=p+"%";$("#pt").textContent=p+"% completado";return p;}
+  function renderLes(){
+    $("#les").innerHTML=lessons.map(function(l,i){return '<div class="lr'+(i===cur?" on":"")+(l.done?" done":"")+'" data-i="'+i+'"><div class="ck">'+(l.done?"✓":(i+1))+'</div><div class="t"><b>'+l.t+'</b><span>'+(l.done?"Completado":"Lección "+(i+1))+'</span></div></div>';}).join("");
+    [].slice.call($("#les").querySelectorAll(".lr")).forEach(function(b){b.onclick=function(){cur=+b.dataset.i;render();};});
+  }
+  function render(){
+    renderLes();
+    var l=lessons[cur];
+    var done=lessons.filter(function(x){return x.done;}).length;
+    if(cur===lessons.length-1 && done>=lessons.length-1 && l.done){return cert();}
+    var quizHtml="";
+    if(l.quiz){quizHtml='<div class="quiz"><div class="q">'+l.quiz.q+'</div>'+l.quiz.o.map(function(o,i){return '<button class="opt" data-q="'+i+'">'+o+'</button>';}).join("")+'</div>';}
+    $("#player").innerHTML=
+      '<div class="screen"><div class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div><div class="lbl">▶ Lección '+(cur+1)+' · '+l.t+'</div></div>'+
+      '<h2>'+l.t+'</h2><p>'+l.d+'</p>'+quizHtml+
+      '<button class="btn" id="next">'+(l.done?"Siguiente lección":(l.quiz?"Responder y continuar":"Marcar como vista y continuar"))+'</button>';
+    var ok=true;
+    if(l.quiz){ok=false;[].slice.call($("#player").querySelectorAll("[data-q]")).forEach(function(b){b.onclick=function(){
+      var sel=+b.dataset.q;[].slice.call($("#player").querySelectorAll(".opt")).forEach(function(x){x.classList.remove("ok","bad");});
+      if(sel===l.quiz.a){b.classList.add("ok");ok=true;}else{b.classList.add("bad");$("#player").querySelectorAll(".opt")[l.quiz.a].classList.add("ok");ok=true;}
+    };});}
+    $("#next").onclick=function(){l.done=true;prog();if(cur<lessons.length-1){cur++;}render();};
+  }
+  function cert(){
+    prog();renderLes();
+    var code="CERT-"+new Date().getFullYear()+"-"+Math.floor(1000+Math.random()*9000);
+    $("#player").innerHTML='<div class="cert"><div class="award">🏆</div><h2>¡Curso completado!</h2><p>Felicitaciones, aprobaste el curso.</p><div class="certbox"><div class="ct">Certificado de aprobación</div><div class="nm">Nombre del Alumno</div><div class="co">Prevención de riesgos en faena · '+brand+'</div><div class="code">'+code+'</div></div><button class="btn" id="dl">⬇ Descargar certificado</button></div>';
+    $("#dl").onclick=function(){var b=new Blob(["CERTIFICADO DE APROBACIÓN\n"+brand+"\nCurso: Prevención de riesgos en faena\nCódigo: "+code],{type:"text/plain"}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="certificado.txt";document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);};
+  }
+
+  var SW=[{c:"#4338CA",c2:"#6D62E0"},{c:"#0D9488",c2:"#2DD4BF"},{c:"#2563EB",c2:"#5B8DEF"},{c:"#C2410C",c2:"#EA7A3C"},{c:"#BE185D",c2:"#EC4899"}];
+  function ac(o){document.documentElement.style.setProperty("--accent",o.c);document.documentElement.style.setProperty("--accent-2",o.c2);
+    var h=o.c.replace("#",""),r=parseInt(h.substr(0,2),16),g=parseInt(h.substr(2,2),16),b=parseInt(h.substr(4,2),16);
+    document.documentElement.style.setProperty("--accent-ink",(0.299*r+0.587*g+0.114*b)>150?"#14131F":"#fff");
+    [].slice.call(document.querySelectorAll(".sw")).forEach(function(e){e.classList.toggle("active",e.dataset.c===o.c);});}
+  function bsw(){var s=$("#sw");s.innerHTML="";SW.forEach(function(o){var b=document.createElement("button");b.className="sw";b.style.background=o.c;b.dataset.c=o.c;b.onclick=function(){ac(o);};s.appendChild(b);});}
+  function ab(n){brand=n||"Marca";$("#bl").textContent=brand;$("#lm").textContent=brand.charAt(0).toUpperCase();$("#kick").textContent=brand+" · Curso certificado";}
+  $("#ib").addEventListener("input",function(e){ab(e.target.value);});
+  bsw();ac(SW[0]);ab("Aprende");prog();render();
+})();
+</script>
+</body>
+</html>

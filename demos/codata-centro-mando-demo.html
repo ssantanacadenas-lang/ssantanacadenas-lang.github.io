@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Centro de Mando IA · Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --accent:#5B6CFF;--accent-2:#8B7BF5;--accent-ink:#fff;--ok:#3DDC97;--warn:#FFC24B;--bad:#FF6B81;
+    --ink:#EAF0FF;--muted:#8A95B5;--line:#212842;--card:#121830;--panel:#0E1426;--bg:#070A16;
+    --display:"Bricolage Grotesque",system-ui,sans-serif;--body:"Inter",system-ui,sans-serif;--mono:"JetBrains Mono",monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:var(--body);color:var(--ink);
+    background:radial-gradient(1000px 500px at 85% -10%,rgba(91,108,255,.12),transparent 60%),var(--bg);
+    min-height:100vh;-webkit-font-smoothing:antialiased}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  input{font-family:inherit}
+  .shell{max-width:1100px;margin:0 auto;padding:24px 20px 50px}
+  .top{display:flex;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+  .logo{display:flex;align-items:center;gap:11px}
+  .logo .m{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#fff;font-family:var(--display);font-weight:800;font-size:18px}
+  .logo b{font-family:var(--display);font-size:20px;color:#fff;display:block;line-height:1}.logo span{font-size:11.5px;color:var(--muted)}
+  .controls{margin-left:auto;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .ti{height:36px;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:0 11px;font-size:13px;width:120px;outline:none;color:#fff}
+  .swatches{display:flex;gap:6px}.sw{width:22px;height:22px;border-radius:999px;border:2px solid transparent}.sw.active{border-color:#fff;transform:scale(1.1)}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px}
+  @media(max-width:680px){.kpis{grid-template-columns:1fr 1fr}}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;position:relative}
+  .kpi .ic{width:34px;height:34px;border-radius:10px;background:color-mix(in srgb,var(--accent) 18%,transparent);display:grid;place-items:center;font-size:16px;margin-bottom:10px}
+  .kpi b{font-family:var(--display);font-weight:800;font-size:24px;display:block;line-height:1;color:#fff}
+  .kpi span{font-size:11.5px;color:var(--muted)}
+  .kpi .tr{position:absolute;top:16px;right:16px;font-size:11px;font-weight:700;font-family:var(--mono)}
+  .row2{display:grid;grid-template-columns:1.4fr 1fr;gap:14px;margin-bottom:16px;align-items:start}
+  @media(max-width:820px){.row2{grid-template-columns:1fr}}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+  .ph{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+  .ph b{font-family:var(--display);font-size:15px;color:#fff}.ph span{font-size:11px;color:var(--muted)}
+  .pb{padding:16px 18px}
+  canvas{display:block;width:100%;height:210px}
+  .pipe{display:flex;flex-direction:column;gap:9px}
+  .stg{display:flex;align-items:center;gap:11px}
+  .stg .nm{font-size:12.5px;width:90px;color:var(--muted)}
+  .stg .t{flex:1;height:10px;background:var(--panel);border-radius:999px;overflow:hidden}
+  .stg .f{height:100%;border-radius:999px;transition:width .7s}
+  .stg .v{font-family:var(--mono);font-size:12px;font-weight:700;width:28px;text-align:right}
+  .copilot{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+  .cpb{padding:16px 18px}
+  .cprow{display:flex;gap:9px}
+  .cprow input{flex:1;height:44px;background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:0 13px;font-size:13.5px;color:#fff;outline:none}
+  .cprow input:focus{border-color:var(--accent)}
+  .cprow .go{width:44px;height:44px;border-radius:11px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;flex:0 0 auto}
+  .cprow .go svg{width:18px;height:18px;fill:none;stroke:#fff;stroke-width:2}
+  .chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+  .chip{font-size:11.5px;border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:6px 11px}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .answer{margin-top:14px;font-size:13.5px;line-height:1.55;background:color-mix(in srgb,var(--accent) 9%,transparent);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:12px 14px;display:none}
+  .answer.on{display:block}
+  .skel{height:12px;background:linear-gradient(90deg,var(--panel),var(--line),var(--panel));background-size:200% 100%;border-radius:6px;animation:sh 1.2s infinite;margin-bottom:8px}
+  @keyframes sh{to{background-position:-200% 0}}
+  .credit{text-align:center;font-size:12px;color:var(--muted);margin-top:22px}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="top">
+    <div class="logo"><div class="m" id="lm">N</div><div><b id="bl">Nexus</b><span>Centro de mando IA · demo</span></div></div>
+    <div class="controls"><input class="ti" id="ib" value="Nexus" maxlength="16"><div class="swatches" id="sw"></div></div>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="ic">💰</div><span class="tr" style="color:var(--ok)">▲ 12%</span><b id="k1">$8,4M</b><span>Ventas del mes</span></div>
+    <div class="kpi"><div class="ic">🧾</div><span class="tr" style="color:var(--ok)">▲ 6%</span><b id="k2">142</b><span>Pedidos</span></div>
+    <div class="kpi"><div class="ic">👥</div><span class="tr" style="color:var(--bad)">▼ 3%</span><b id="k3">38</b><span>Clientes nuevos</span></div>
+    <div class="kpi"><div class="ic">📈</div><span class="tr" style="color:var(--ok)">▲ 9%</span><b id="k4">$59K</b><span>Ticket promedio</span></div>
+  </div>
+
+  <div class="row2">
+    <div class="panel"><div class="ph"><b>Ventas últimos 7 meses</b><span>en millones</span></div><div class="pb"><canvas id="cv"></canvas></div></div>
+    <div class="panel"><div class="ph"><b>Embudo de ventas</b></div><div class="pb"><div class="pipe" id="pipe"></div></div></div>
+  </div>
+
+  <div class="copilot">
+    <div class="ph"><b>🤖 Copiloto IA</b><span>pregunta sobre tus datos</span></div>
+    <div class="cpb">
+      <div class="cprow"><input id="q" placeholder="Ej: ¿qué debería mejorar este mes?"><button class="go" id="go"><svg viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg></button></div>
+      <div class="chips" id="chips"></div>
+      <div class="answer" id="answer"></div>
+    </div>
+  </div>
+  <div class="credit">Demo interactiva · solución re-skineable · datos de ejemplo · IA real</div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  function $(s){return document.querySelector(s);}
+  var brand="Nexus";
+  var sales=[5.1,5.8,6.2,5.9,7.1,7.8,8.4];
+  var months=["Dic","Ene","Feb","Mar","Abr","May","Jun"];
+  var pipe=[["Prospectos",100,"#8A95B5"],["Contactados",68,"#5B6CFF"],["Propuesta",41,"#8B7BF5"],["Cerrados",23,"#3DDC97"]];
+  var prompts=["¿Qué debería mejorar?","¿Por qué bajaron los clientes nuevos?","Dame 3 acciones para subir ventas"];
+
+  var cv=$("#cv"),ctx=cv.getContext("2d"),W=0,H=0,dpr=Math.min(window.devicePixelRatio||1,2);
+  function resize(){var r=cv.getBoundingClientRect();W=r.width;H=r.height;cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);}
+  window.addEventListener("resize",function(){resize();draw(1);});
+  function getC(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+  function draw(prog){
+    ctx.clearRect(0,0,W,H);var pad={l:8,r:8,t:14,b:22},n=sales.length,max=Math.max.apply(null,sales)*1.12;
+    var gap=(W-pad.l-pad.r)/n,bw=gap*0.5,acc=getC("--accent"),acc2=getC("--accent-2");
+    sales.forEach(function(v,i){var h=(v/max)*(H-pad.t-pad.b)*prog,x=pad.l+gap*i+(gap-bw)/2,y=H-pad.b-h;
+      var g=ctx.createLinearGradient(0,y,0,H-pad.b);g.addColorStop(0,acc2);g.addColorStop(1,"rgba(91,108,255,.15)");
+      ctx.fillStyle=g;rr(x,y,bw,h,5);ctx.fill();
+      ctx.fillStyle="rgba(255,255,255,.45)";ctx.font="10px Inter";ctx.textAlign="center";ctx.fillText(months[i],x+bw/2,H-7);});
+  }
+  function rr(x,y,w,h,r){r=Math.min(r,h/2);ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+  function animate(){var s=null;function st(t){if(!s)s=t;var p=Math.min(1,(t-s)/650);draw(p);if(p<1)requestAnimationFrame(st);}requestAnimationFrame(st);}
+
+  function renderPipe(){
+    $("#pipe").innerHTML=pipe.map(function(p){return '<div class="stg"><span class="nm">'+p[0]+'</span><div class="t"><div class="f" style="width:0;background:'+p[2]+'" data-w="'+p[1]+'"></div></div><span class="v">'+p[1]+'</span></div>';}).join("");
+    setTimeout(function(){[].slice.call($("#pipe").querySelectorAll(".f")).forEach(function(f){f.style.width=f.dataset.w+"%";});},80);
+  }
+  function chips(){$("#chips").innerHTML="";prompts.forEach(function(p){var b=document.createElement("button");b.className="chip";b.textContent=p;b.onclick=function(){$("#q").value=p;ask();};$("#chips").appendChild(b);});}
+
+  function ask(){
+    var q=$("#q").value.trim();if(!q)return;
+    var a=$("#answer");a.classList.add("on");a.innerHTML='<div class="skel" style="width:90%"></div><div class="skel" style="width:100%"></div><div class="skel" style="width:70%"></div>';
+    var ctx2="Datos del panel de "+brand+": ventas últimos 7 meses (millones CLP): "+sales.join(", ")+". Pedidos del mes: 142 (+6%). Clientes nuevos: 38 (-3%). Ticket promedio: $59.000 (+9%). Embudo: "+pipe.map(function(p){return p[0]+" "+p[1];}).join(", ")+".";
+    var sys="Eres un copiloto de negocios. Con los datos del panel, responde la pregunta del dueño en español de Chile, breve y accionable (máx 4 frases o viñetas). Básate en los números dados; no inventes datos nuevos.";
+    fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:1000,system:sys,messages:[{role:"user",content:ctx2+"\n\nPregunta: "+q}]})
+    }).then(function(r){return r.json();}).then(function(d){
+      var t="";if(d&&d.content)t=d.content.filter(function(i){return i.type==="text";}).map(function(i){return i.text;}).join("").trim();
+      a.textContent=t||"No pude responder ahora.";
+    }).catch(function(){a.textContent="No pude conectar ahora ⚠️. Reintenta en unos segundos.";});
+  }
+  $("#go").onclick=ask;$("#q").addEventListener("keydown",function(e){if(e.key==="Enter")ask();});
+
+  var SW=[{c:"#5B6CFF",c2:"#8B7BF5"},{c:"#00E0C2",c2:"#86EFE0"},{c:"#3DDC97",c2:"#7DF5B0"},{c:"#FF6B81",c2:"#FF9DAC"},{c:"#FFC24B",c2:"#FFD98A"}];
+  function ac(o){document.documentElement.style.setProperty("--accent",o.c);document.documentElement.style.setProperty("--accent-2",o.c2);
+    var h=o.c.replace("#",""),r=parseInt(h.substr(0,2),16),g=parseInt(h.substr(2,2),16),b=parseInt(h.substr(4,2),16);
+    document.documentElement.style.setProperty("--accent-ink",(0.299*r+0.587*g+0.114*b)>150?"#070A16":"#fff");
+    [].slice.call(document.querySelectorAll(".sw")).forEach(function(e){e.classList.toggle("active",e.dataset.c===o.c);});draw(1);}
+  function bsw(){var s=$("#sw");s.innerHTML="";SW.forEach(function(o){var b=document.createElement("button");b.className="sw";b.style.background=o.c;b.dataset.c=o.c;b.onclick=function(){ac(o);};s.appendChild(b);});}
+  function ab(n){brand=n||"Marca";$("#bl").textContent=brand;$("#lm").textContent=brand.charAt(0).toUpperCase();}
+  $("#ib").addEventListener("input",function(e){ab(e.target.value);});
+  bsw();ac(SW[0]);ab("Nexus");resize();animate();renderPipe();chips();
+})();
+</script>
+</body>
+</html>

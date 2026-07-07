@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CO-DATA · Cumplimiento Ley 21.719 para tu empresa</title>
+<meta name="description" content="Implementación técnica y evidencia para la Ley 21.719 de Protección de Datos. Diagnóstico gratis. Financiable con Sercotec Kit Digital.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --char:#131410;
+    --char-2:#1B1D15;
+    --surf:#20221A;
+    --line:#33362A;
+    --amber:#F0A72A;
+    --amber-soft:#F5B94F;
+    --paper:#F3F1E7;
+    --muted:#A6A497;
+    --muted-2:#77766B;
+    --red:#E2604A;
+    --green:#9DC257;
+    --disp:'Space Grotesk',sans-serif;
+    --body:'Inter',sans-serif;
+    --mono:'Space Mono',monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--char);color:var(--paper);font-family:var(--body);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--amber);display:inline-block}
+  h1,h2,h3{font-family:var(--disp);font-weight:600;line-height:1.08;letter-spacing:-.01em}
+  a{color:inherit;text-decoration:none}
+  .btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--disp);font-weight:600;font-size:16px;padding:15px 26px;border-radius:2px;border:1px solid var(--amber);background:var(--amber);color:#1a1400;transition:transform .15s ease,background .2s ease;cursor:pointer}
+  .btn:hover{background:var(--amber-soft);transform:translateY(-2px)}
+  .btn.ghost{background:transparent;color:var(--amber)}
+  .btn.ghost:hover{background:rgba(240,167,42,.1)}
+  :focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+
+  /* NAV */
+  nav{position:sticky;top:0;z-index:50;background:rgba(19,20,16,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;max-width:1080px;margin:0 auto}
+  .brand{font-family:var(--disp);font-weight:700;font-size:20px;letter-spacing:-.02em}
+  .brand b{color:var(--amber)}
+  .nav-cta{font-family:var(--mono);font-size:13px;border:1px solid var(--line);padding:8px 16px;border-radius:2px;transition:border-color .2s}
+  .nav-cta:hover{border-color:var(--amber);color:var(--amber)}
+
+  /* HERO */
+  .hero{padding:90px 0 70px;border-bottom:1px solid var(--line);position:relative}
+  .hero-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:56px;align-items:center}
+  .hero h1{font-size:clamp(38px,6vw,66px);margin:18px 0 22px}
+  .hero h1 .hl{color:var(--amber)}
+  .hero p.lead{font-size:19px;color:var(--muted);max-width:34ch;margin-bottom:34px}
+  .hero-actions{display:flex;gap:14px;flex-wrap:wrap}
+  .counter{background:var(--char-2);border:1px solid var(--line);border-radius:4px;padding:28px}
+  .counter .lab{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted-2)}
+  .counter .num{font-family:var(--disp);font-weight:700;font-size:78px;line-height:1;color:var(--amber);margin:6px 0}
+  .counter .sub{font-size:14px;color:var(--muted)}
+  .counter .date{margin-top:18px;padding-top:16px;border-top:1px solid var(--line);font-family:var(--mono);font-size:13px;color:var(--paper);display:flex;justify-content:space-between}
+
+  /* RIESGO */
+  .risk{padding:70px 0;border-bottom:1px solid var(--line)}
+  .sec-head{max-width:60ch;margin-bottom:44px}
+  .sec-head h2{font-size:clamp(28px,4vw,42px);margin:14px 0 16px}
+  .sec-head p{color:var(--muted);font-size:17px}
+  .tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .tier{background:var(--char-2);border:1px solid var(--line);border-radius:4px;padding:24px}
+  .tier .t{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .tier .utm{font-family:var(--disp);font-weight:700;font-size:30px;margin:10px 0 2px}
+  .tier .clp{font-size:14px;color:var(--red);font-family:var(--mono)}
+  .tier .desc{font-size:14px;color:var(--muted);margin-top:12px}
+  .risk-note{margin-top:22px;font-size:15px;color:var(--muted);font-family:var(--mono)}
+  .risk-note b{color:var(--paper)}
+
+  /* SERVICIOS */
+  .serv{padding:76px 0;border-bottom:1px solid var(--line)}
+  .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:8px}
+  .card{background:var(--char-2);border:1px solid var(--line);border-radius:4px;padding:30px;display:flex;flex-direction:column;transition:border-color .2s,transform .2s}
+  .card:hover{border-color:var(--amber);transform:translateY(-3px)}
+  .card.feat{border-color:var(--amber);background:linear-gradient(180deg,rgba(240,167,42,.07),transparent 60%)}
+  .card .tag{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);margin-bottom:14px}
+  .card h3{font-size:24px;margin-bottom:6px}
+  .card .price{font-family:var(--disp);font-weight:700;font-size:26px;color:var(--paper);margin:14px 0 4px}
+  .card .price small{font-size:14px;color:var(--muted);font-weight:500}
+  .card .free{color:var(--green)}
+  .card ul{list-style:none;margin:18px 0 0;display:flex;flex-direction:column;gap:9px}
+  .card li{font-size:14px;color:var(--muted);padding-left:22px;position:relative}
+  .card li::before{content:"›";position:absolute;left:4px;color:var(--amber);font-family:var(--mono)}
+  .card .foot{margin-top:auto;padding-top:20px;font-size:13px;color:var(--muted-2);font-family:var(--mono)}
+
+  /* PROCESO */
+  .proc{padding:76px 0;border-bottom:1px solid var(--line)}
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:8px}
+  .step{border-top:2px solid var(--amber);padding-top:18px}
+  .step .n{font-family:var(--mono);font-size:13px;color:var(--amber)}
+  .step h3{font-size:19px;margin:8px 0 6px}
+  .step p{font-size:14px;color:var(--muted)}
+
+  /* GARANTIA */
+  .guar{padding:76px 0;border-bottom:1px solid var(--line)}
+  .guar-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .gbox{border:1px solid var(--line);border-radius:4px;padding:30px;background:var(--char-2)}
+  .gbox.yes{border-left:3px solid var(--green)}
+  .gbox.law{border-left:3px solid var(--amber)}
+  .gbox h3{font-size:20px;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+  .gbox ul{list-style:none;display:flex;flex-direction:column;gap:11px}
+  .gbox li{font-size:15px;color:var(--paper);padding-left:24px;position:relative;line-height:1.5}
+  .gbox.yes li::before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:700}
+  .gbox.law li::before{content:"→";position:absolute;left:0;color:var(--amber);font-family:var(--mono)}
+  .gbox .cap{font-size:13px;color:var(--muted);margin-top:16px;font-family:var(--mono)}
+
+  /* SERCOTEC */
+  .subsidy{padding:64px 0;border-bottom:1px solid var(--line)}
+  .subsidy-in{background:var(--char-2);border:1px solid var(--line);border-radius:4px;padding:40px;display:grid;grid-template-columns:1fr auto;gap:32px;align-items:center}
+  .subsidy h2{font-size:clamp(24px,3.5vw,34px);margin-bottom:12px}
+  .subsidy p{color:var(--muted);font-size:16px;max-width:52ch}
+  .subsidy .big{font-family:var(--disp);font-weight:700;font-size:52px;color:var(--amber);white-space:nowrap;text-align:right}
+  .subsidy .big small{display:block;font-size:13px;color:var(--muted);font-family:var(--mono);font-weight:400;letter-spacing:.1em}
+
+  /* CTA */
+  .final{padding:90px 0 70px;text-align:center}
+  .final h2{font-size:clamp(32px,5vw,54px);margin-bottom:18px}
+  .final p{color:var(--muted);font-size:18px;max-width:46ch;margin:0 auto 34px}
+  .final .btn{font-size:18px;padding:18px 34px}
+
+  /* FOOTER */
+  footer{border-top:1px solid var(--line);padding:40px 0;background:var(--char-2)}
+  .foot-in{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+  .foot-in .brand{font-size:18px}
+  .foot-contact{font-family:var(--mono);font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:4px;text-align:right}
+  .foot-contact a:hover{color:var(--amber)}
+  .disclaimer{max-width:1080px;margin:24px auto 0;padding:0 24px;font-size:12px;color:var(--muted-2);font-family:var(--mono);line-height:1.7}
+
+  /* TIMELINE */
+  .timeline{padding:72px 0;border-bottom:1px solid var(--line)}
+  .tl{position:relative;margin-top:44px}
+  .tl-line{position:absolute;top:8px;left:6%;right:6%;height:2px;background:var(--line)}
+  .tl-line i{position:absolute;left:0;top:0;height:100%;background:var(--amber);width:0;transition:width 1.4s ease .2s}
+  .reveal.in .tl-line i{width:var(--prog,55%)}
+  .tl-nodes{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;position:relative}
+  .tl-node{text-align:center}
+  .tl-dot{width:16px;height:16px;border-radius:50%;background:var(--line);border:3px solid var(--char);margin:0 auto 14px;position:relative;z-index:2}
+  .tl-node.done .tl-dot{background:var(--amber)}
+  .tl-node.now .tl-dot{background:var(--amber);box-shadow:0 0 0 6px rgba(240,167,42,.16)}
+  .tl-date{font-family:var(--mono);font-size:12px;color:var(--amber)}
+  .tl-lab{font-family:var(--disp);font-weight:600;font-size:15px;margin-top:5px}
+  .tl-node.now .tl-lab{color:var(--amber)}
+  .tl-sub{font-size:12.5px;color:var(--muted);margin-top:3px;line-height:1.4}
+
+  /* DATA BARS in tiers */
+  .tier .bar{height:8px;background:var(--char);border-radius:20px;margin-top:16px;overflow:hidden}
+  .tier .bar span{display:block;height:100%;width:0;border-radius:20px;transition:width 1s ease .25s}
+  .reveal.in .tier .bar span,.tier.reveal.in .bar span{width:var(--w)}
+
+  /* COMPARE */
+  .compare{padding:76px 0;border-bottom:1px solid var(--line)}
+  .cmp-row{margin-bottom:24px}
+  .cmp-head{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--mono);font-size:13px;margin-bottom:9px;gap:12px}
+  .cmp-head b{font-family:var(--disp);font-size:17px}
+  .cmp-bar{height:38px;background:var(--char-2);border:1px solid var(--line);border-radius:3px;overflow:hidden}
+  .cmp-fill{height:100%;width:0;border-radius:2px 0 0 2px;transition:width 1.2s ease .2s}
+  .cmp-row.reveal.in .cmp-fill{width:var(--w)}
+  .cmp-ratio{margin-top:14px;font-family:var(--disp);font-weight:700;font-size:clamp(24px,4vw,38px);color:var(--amber)}
+  .cmp-ratio small{display:block;font-family:var(--mono);font-weight:400;font-size:13px;color:var(--muted);letter-spacing:.06em;margin-top:4px}
+
+  /* APPLIES chips */
+  .applies{padding:72px 0;border-bottom:1px solid var(--line)}
+  .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+  .chip{font-family:var(--mono);font-size:13px;padding:9px 15px;border:1px solid var(--line);border-radius:20px;background:var(--char-2)}
+  .applies-note{margin-top:26px;background:rgba(240,167,42,.08);border:1px solid rgba(240,167,42,.3);border-radius:4px;padding:20px 24px;font-size:16px}
+  .applies-note b{color:var(--amber)}
+
+  /* WHY US */
+  .why{padding:82px 0;border-bottom:1px solid var(--line)}
+  .five-one{display:flex;align-items:center;justify-content:center;gap:22px;margin:26px 0 6px;flex-wrap:wrap}
+  .fo-a,.fo-b{font-family:var(--disp);font-weight:700;text-align:center}
+  .fo-a .n,.fo-b .n{font-size:54px;line-height:1}
+  .fo-a .n{color:var(--muted-2)}
+  .fo-b .n{color:var(--amber)}
+  .fo-a .l,.fo-b .l{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--muted);margin-top:6px;text-transform:uppercase}
+  .fo-arr{font-size:30px;color:var(--amber)}
+  .why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:34px}
+  .why-card{background:var(--char-2);border:1px solid var(--line);border-radius:4px;padding:26px;transition:border-color .2s}
+  .why-card:hover{border-color:var(--amber)}
+  .why-card .k{font-family:var(--mono);font-size:22px;font-weight:700;color:var(--amber)}
+  .why-card h3{font-size:18px;margin:12px 0 8px}
+  .why-card p{font-size:14px;color:var(--muted);line-height:1.55}
+
+  /* FLAGSHIP / TECHO */
+  .flagship{padding:14px 0 78px}
+  .flag{background:linear-gradient(180deg,rgba(240,167,42,.11),transparent 72%);border:1px solid var(--amber);border-radius:6px;padding:42px;display:grid;grid-template-columns:1.35fr 1fr;gap:40px;align-items:center}
+  .flag .tag{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber)}
+  .flag h3{font-size:clamp(25px,3.6vw,34px);margin:12px 0 12px}
+  .flag>div>p{color:var(--muted);font-size:16px;margin-bottom:22px;max-width:52ch}
+  .flag ul{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:11px}
+  .flag li{font-size:14px;color:var(--paper);padding-left:22px;position:relative;line-height:1.45}
+  .flag li::before{content:"✓";position:absolute;left:0;color:var(--amber);font-weight:700}
+  .flag-price{text-align:right;border-left:1px solid var(--line);padding-left:36px}
+  .flag-price .p{font-family:var(--disp);font-weight:700;font-size:44px;color:var(--amber);line-height:1}
+  .flag-price .u{font-family:var(--mono);font-size:13px;color:var(--muted);margin-top:6px}
+  .flag-price .note{font-size:13px;color:var(--muted);margin-top:18px;border-top:1px solid var(--line);padding-top:15px;line-height:1.55;text-align:left}
+
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.in{opacity:1;transform:none}
+
+  @media(max-width:860px){
+    .hero-grid{grid-template-columns:1fr;gap:36px}
+    .tiers,.cards,.steps,.guar-grid,.why-grid{grid-template-columns:1fr}
+    .flag{grid-template-columns:1fr;gap:26px;padding:30px}
+    .flag ul{grid-template-columns:1fr}
+    .flag-price{text-align:left;border-left:none;border-top:1px solid var(--line);padding-left:0;padding-top:22px}
+    .tl-nodes{grid-template-columns:1fr;gap:22px;text-align:left}
+    .tl-line{display:none}
+    .tl-node{display:grid;grid-template-columns:auto 1fr;gap:14px;text-align:left;align-items:start}
+    .tl-dot{margin:2px 0 0}
+    .steps{gap:20px}
+    .subsidy-in{grid-template-columns:1fr;text-align:left}
+    .subsidy .big{text-align:left}
+    .counter .num{font-size:64px}
+  }
+  @media(prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    .reveal{opacity:1;transform:none;transition:none}
+    .btn:hover,.card:hover{transform:none}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <div class="brand">CO<b>·</b>DATA</div>
+    <a href="#radar" class="nav-cta">Diagnóstico gratis →</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">Ley 21.719 · Protección de Datos</span>
+      <h1>La ley cambió. <span class="hl">¿Tu empresa está lista</span> o solo tiene una política olvidada en la web?</h1>
+      <p class="lead">Desde el 1 de diciembre de 2026 fiscalizan de verdad. No con papeles: con evidencia. Nosotros la construimos.</p>
+      <div class="hero-actions">
+        <a href="#radar" class="btn">Revisar mi empresa gratis</a>
+        <a href="#servicios" class="btn ghost">Ver planes</a>
+      </div>
+    </div>
+    <aside class="counter" aria-label="Cuenta regresiva a la vigencia de la ley">
+      <div class="lab">Días para la vigencia plena</div>
+      <div class="num" id="days">—</div>
+      <div class="sub">Un proyecto bien hecho toma meses. Empezar tarde es llegar tarde.</div>
+      <div class="date"><span>Hoy</span><span id="today">—</span></div>
+      <div class="date" style="border-top:none;padding-top:0;margin-top:6px"><span style="color:var(--amber)">Vigencia</span><span style="color:var(--amber)">01 · 12 · 2026</span></div>
+    </aside>
+  </div>
+</header>
+
+<section class="timeline">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">La cuenta atrás</span>
+      <h2>Ya empezó. La pregunta es si llegas ordenado o corriendo.</h2>
+      <p>La ley se publicó hace más de un año y tiene 24 meses de transición. Ese plazo no es un regalo: es una fecha límite.</p>
+    </div>
+    <div class="tl reveal" style="--prog:64%">
+      <div class="tl-line"><i></i></div>
+      <div class="tl-nodes">
+        <div class="tl-node done"><div class="tl-dot"></div><div class="tl-date">Dic 2024</div><div class="tl-lab">Se publica la ley</div><div class="tl-sub">Arranca el reloj de 24 meses.</div></div>
+        <div class="tl-node now"><div class="tl-dot"></div><div class="tl-date">Estás aquí</div><div class="tl-lab">Hoy</div><div class="tl-sub">Tiempo justo para hacerlo bien, no para improvisar.</div></div>
+        <div class="tl-node"><div class="tl-dot"></div><div class="tl-date">1 Dic 2026</div><div class="tl-lab">Vigencia plena</div><div class="tl-sub">La Agencia empieza a fiscalizar y sancionar.</div></div>
+        <div class="tl-node"><div class="tl-dot"></div><div class="tl-date">Dic 2027</div><div class="tl-lab">Fin de la gracia PYME</div><div class="tl-sub">Se acaban las amonestaciones: llegan las multas.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="risk">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">El riesgo real</span>
+      <h2>No es un trámite. Es plata, operación y reputación.</h2>
+      <p>La nueva Agencia puede multar, suspender tu tratamiento de datos por hasta 30 días y publicar la sanción en un registro nacional visible por 5 años.</p>
+    </div>
+    <div class="tiers">
+      <div class="tier reveal">
+        <div class="t">Infracción leve</div>
+        <div class="utm">5.000 UTM</div>
+        <div class="clp">≈ $350 millones</div>
+        <div class="bar" style="--w:25%"><span style="background:var(--amber)"></span></div>
+        <div class="desc">No publicar la política, no informar bien al titular.</div>
+      </div>
+      <div class="tier reveal">
+        <div class="t">Infracción grave</div>
+        <div class="utm">10.000 UTM</div>
+        <div class="clp">≈ $700 millones</div>
+        <div class="bar" style="--w:50%"><span style="background:var(--amber)"></span></div>
+        <div class="desc">Tratar datos sin base legal o no responder los derechos ARCO.</div>
+      </div>
+      <div class="tier reveal">
+        <div class="t">Infracción gravísima</div>
+        <div class="utm">20.000 UTM</div>
+        <div class="clp">≈ $1.400 millones</div>
+        <div class="bar" style="--w:100%"><span style="background:var(--red)"></span></div>
+        <div class="desc">Usar datos sensibles sin autorización o vender bases de datos.</div>
+      </div>
+    </div>
+    <p class="risk-note reveal">Aplica a <b>toda empresa</b>, sin importar el tamaño. Una lista de clientes en Excel ya es tratamiento de datos. Las PYME tienen un año de gracia (solo amonestación) — pero igual queda registrado.</p>
+  </div>
+</section>
+
+<section class="compare">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Pon los números lado a lado</span>
+      <h2>Ordenarte cuesta una fracción de lo que arriesgas</h2>
+      <p>No es un gasto: es un seguro barato contra un golpe caro.</p>
+    </div>
+    <div class="cmp-row reveal" style="--w:2%">
+      <div class="cmp-head"><span>Prepararte con CO-DATA</span><b style="color:var(--green)">desde $690.000</b></div>
+      <div class="cmp-bar"><div class="cmp-fill" style="background:var(--green)"></div></div>
+    </div>
+    <div class="cmp-row reveal" style="--w:100%">
+      <div class="cmp-head"><span>Multa gravísima</span><b style="color:var(--red)">hasta $1.400.000.000</b></div>
+      <div class="cmp-bar"><div class="cmp-fill" style="background:var(--red)"></div></div>
+    </div>
+    <div class="cmp-ratio reveal">Hasta 2.000 veces menos<small>A escala real, la inversión casi ni se ve al lado de la multa. Ese es el punto.</small></div>
+  </div>
+</section>
+
+<section class="applies">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">¿Esto me aplica?</span>
+      <h2>Si guardas cualquiera de estos, sí</h2>
+      <p>Un dato personal es cualquier cosa que identifique a una persona. Es más de lo que crees:</p>
+    </div>
+    <div class="chips reveal">
+      <span class="chip">Nombre</span>
+      <span class="chip">RUT</span>
+      <span class="chip">Correo</span>
+      <span class="chip">Teléfono</span>
+      <span class="chip">Dirección</span>
+      <span class="chip">Historial de compras</span>
+      <span class="chip">Foto</span>
+      <span class="chip">Datos de empleados</span>
+      <span class="chip" style="border-color:var(--red)">Salud <b style="color:var(--red)">· sensible</b></span>
+      <span class="chip" style="border-color:var(--red)">Huella / biometría <b style="color:var(--red)">· sensible</b></span>
+    </div>
+    <div class="applies-note reveal">¿Tienes clientes, empleados o una <b>lista en Excel</b>? Entonces tratas datos personales, y la ley te aplica igual que a una multinacional. No hay excepción por tamaño.</div>
+  </div>
+</section>
+
+<section class="serv" id="servicios">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Cómo lo resolvemos</span>
+      <h2>Del diagnóstico al día a día resuelto</h2>
+      <p>Empiezas gratis, ordenas lo esencial y quedas cubierto todos los meses. Cada etapa se paga sola.</p>
+    </div>
+    <div class="cards">
+      <div class="card feat reveal" id="radar">
+        <div class="tag">Paso 0 · Sin costo</div>
+        <h3>Radar de cumplimiento</h3>
+        <div class="price free">Gratis</div>
+        <ul>
+          <li>Revisión rápida de tu situación actual</li>
+          <li>Semáforo rojo / amarillo / verde por área</li>
+          <li>Informe con tus 3 riesgos prioritarios</li>
+        </ul>
+        <div class="foot">Sin compromiso. En una reunión sabes dónde estás parado.</div>
+      </div>
+      <div class="card reveal">
+        <div class="tag">Paso 1 · Entrada</div>
+        <h3>Parte Ordenado</h3>
+        <div class="price">desde $690.000 <small>pago único</small></div>
+        <ul>
+          <li>Inventario de datos de tu empresa</li>
+          <li>Base legal para cada uso de datos</li>
+          <li>Política de privacidad, cookies y formularios</li>
+          <li>Protocolos de derechos y de brechas</li>
+          <li>Capacitación y carpeta de evidencia</li>
+        </ul>
+        <div class="foot">Cabe dentro del subsidio Sercotec Kit Digital.</div>
+      </div>
+      <div class="card reveal">
+        <div class="tag">Paso 2 · Implementación</div>
+        <h3>Implementación</h3>
+        <div class="price">desde $1.500.000 <small>pago único</small></div>
+        <ul>
+          <li>Todo lo del plan anterior</li>
+          <li>Flujos de derechos ARCO en tu CRM y formularios</li>
+          <li>Contratos de datos con tus proveedores</li>
+          <li>Registro de consentimiento con evidencia</li>
+          <li>Evaluación de impacto si tratas datos sensibles</li>
+        </ul>
+        <div class="foot">Para clínicas, colegios, corredoras, RRHH y retail.</div>
+      </div>
+      <div class="card reveal">
+        <div class="tag">Paso 3 · Continuidad</div>
+        <h3>Al Día</h3>
+        <div class="price">desde $80.000 <small>/ mes</small></div>
+        <ul>
+          <li>Registro vivo siempre actualizado</li>
+          <li>Gestión de solicitudes de los titulares</li>
+          <li>Respuesta acompañada ante brechas</li>
+          <li>Reporte trimestral para gerencia</li>
+        </ul>
+        <div class="foot">La tranquilidad de no volver a preocuparte del tema.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="flagship">
+  <div class="wrap">
+    <div class="flag reveal">
+      <div>
+        <span class="tag">El plan que lo resuelve todo · recurrente</span>
+        <h3>Cumplimiento Gestionado: tu área de datos, sin contratar a nadie</h3>
+        <p>Operamos tu cumplimiento mes a mes y somos tu punto de contacto operativo. Tú te dedicas a tu negocio; nosotros nos hacemos cargo del tema.</p>
+        <ul>
+          <li>Delegado de datos externo, función operativa</li>
+          <li>Registro y evidencia siempre al día</li>
+          <li>Gestión de todas las solicitudes de titulares</li>
+          <li>Coordinación ante brechas dentro de 72h</li>
+          <li>Revisión de nuevos usos de datos y proveedores</li>
+          <li>Reporte ejecutivo para tu gerencia</li>
+        </ul>
+      </div>
+      <div class="flag-price">
+        <div class="p">desde $250.000</div>
+        <div class="u">por mes</div>
+        <div class="note">Cuesta menos que contratar un encargado interno dedicado (más de $1.000.000/mes). La validación jurídica la firma tu abogado.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="proc">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">El proceso</span>
+      <h2>Ordenado, en semanas, sin frenar tu operación</h2>
+    </div>
+    <div class="steps">
+      <div class="step reveal"><div class="n">01</div><h3>Levantamiento</h3><p>Conversamos qué datos manejas, dónde viven y con quién los compartes.</p></div>
+      <div class="step reveal"><div class="n">02</div><h3>Inventario</h3><p>Armamos el registro de tratamiento y la base legal de cada uso.</p></div>
+      <div class="step reveal"><div class="n">03</div><h3>Implementación</h3><p>Dejamos web, formularios, consentimiento y protocolos funcionando.</p></div>
+      <div class="step reveal"><div class="n">04</div><h3>Evidencia</h3><p>Te entregamos la carpeta que demuestra tu diligencia ante una fiscalización.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="why">
+  <div class="wrap">
+    <div class="sec-head reveal" style="text-align:center;margin-left:auto;margin-right:auto">
+      <span class="eyebrow">Por qué todo con nosotros</span>
+      <h2>La ley toca todo. Resuélvela con un solo socio.</h2>
+      <p style="margin-left:auto;margin-right:auto">Cumplir toca tu web, tu CRM, tus formularios, tus contratos y tus registros al mismo tiempo. Repartir eso entre cinco proveedores genera justo la fricción que la ley castiga.</p>
+    </div>
+    <div class="five-one reveal">
+      <div class="fo-a"><div class="n">5</div><div class="l">proveedores sueltos</div></div>
+      <div class="fo-arr">→</div>
+      <div class="fo-b"><div class="n">1</div><div class="l">CO-DATA</div></div>
+    </div>
+    <div class="why-grid">
+      <div class="why-card reveal"><div class="k">01</div><h3>Un solo responsable</h3><p>Legal, web, CRM y registros bajo un mismo techo. Un teléfono, no cinco culpables señalándose entre ellos.</p></div>
+      <div class="why-card reveal"><div class="k">02</div><h3>Te queda funcionando</h3><p>No entregamos un PDF y chao. Dejamos los sistemas operando y generando la evidencia que te piden.</p></div>
+      <div class="why-card reveal"><div class="k">03</div><h3>Usamos lo que ya tienes</h3><p>Tu web, tu CRM, tu WhatsApp, tus formularios. Los conectamos y ordenamos, sin que compres nada nuevo.</p></div>
+      <div class="why-card reveal"><div class="k">04</div><h3>Precio y trato de PYME</h3><p>Hablas directo con quien hace la pega, sin call center. Y con Sercotec, sin sacar plata del bolsillo.</p></div>
+      <div class="why-card reveal"><div class="k">05</div><h3>Resuelto todos los meses</h3><p>La mantención mantiene tu registro vivo y responde por ti. Dejas de preocuparte del tema para siempre.</p></div>
+      <div class="why-card reveal"><div class="k">06</div><h3>Somos un ecosistema</h3><p>CO-DATA no es una agencia: son sistemas y automatizaciones. Lo que hoy es cumplimiento, mañana es tu operación más ordenada.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="guar">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Reglas claras</span>
+      <h2>Qué garantizamos, y qué revisa tu abogado</h2>
+      <p>Somos un ecosistema de sistemas y automatizaciones, no un estudio jurídico. Por eso separamos las cosas con transparencia.</p>
+    </div>
+    <div class="guar-grid">
+      <div class="gbox yes reveal">
+        <h3>Lo que CO-DATA garantiza</h3>
+        <ul>
+          <li>La implementación técnica funcionando de punta a punta</li>
+          <li>La evidencia y trazabilidad que exige la fiscalización</li>
+          <li>Los sistemas de captura, registro y consentimiento operativos</li>
+          <li>Soporte y acompañamiento durante todo el proceso</li>
+        </ul>
+        <div class="cap">Garantizamos implementación, funcionamiento y soporte.</div>
+      </div>
+      <div class="gbox law reveal">
+        <h3>Lo que valida tu abogado</h3>
+        <ul>
+          <li>La opinión legal de fondo sobre tu caso</li>
+          <li>La firma de que los documentos cumplen la ley</li>
+          <li>Tu representación ante la Agencia si te fiscalizan</li>
+        </ul>
+        <div class="cap">Te dejamos todo listo para que tu abogado solo valide. ¿No tienes uno? Te lo recomendamos.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="subsidy">
+  <div class="wrap">
+    <div class="subsidy-in reveal">
+      <div>
+        <span class="eyebrow">Financiamiento</span>
+        <h2>Ordénate sin sacar plata de tu bolsillo</h2>
+        <p>El plan de entrada califica como digitalización dentro del Sercotec Kit Digital, un subsidio no reembolsable para empresas de menor tamaño. Te ayudamos a encajarlo.</p>
+      </div>
+      <div class="big">$1.2M<small>Kit Digital · no reembolsable</small></div>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <h2>Empieza por saber dónde estás</h2>
+    <p>El Radar es gratis y sin compromiso. En una reunión tienes tu semáforo y tus prioridades.</p>
+    <a href="mailto:contacto@co-data.cl?subject=Quiero%20mi%20Radar%20de%20cumplimiento%20Ley%2021.719" class="btn">Solicitar mi diagnóstico gratis</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-in">
+    <div>
+      <div class="brand">CO<b>·</b>DATA</div>
+      <div style="font-family:var(--mono);font-size:12px;color:var(--muted-2);margin-top:6px">Sistemas, soluciones y automatizaciones</div>
+    </div>
+    <div class="foot-contact">
+      <a href="mailto:contacto@co-data.cl">contacto@co-data.cl</a>
+      <a href="https://wa.me/56962204705">WhatsApp +56 9 6220 4705</a>
+    </div>
+  </div>
+  <p class="disclaimer">CO-DATA entrega servicios de implementación técnica, evidencia y trazabilidad para la adecuación a la Ley 21.719. No constituye asesoría legal ni garantiza un resultado ante la Agencia de Protección de Datos Personales; la validación jurídica corresponde a un abogado. Los montos referenciales de multas se basan en el valor UTM vigente en 2026 y pueden variar.</p>
+</footer>
+
+<script>
+  (function(){
+    var target=new Date(2026,11,1);
+    var now=new Date();
+    var diff=Math.max(0,Math.round((target-now)/86400000));
+    var d=document.getElementById('days'); if(d) d.textContent=diff.toLocaleString('es-CL');
+    var t=document.getElementById('today');
+    if(t) t.textContent=now.toLocaleDateString('es-CL',{day:'2-digit',month:'2-digit',year:'numeric'}).replace(/\//g,' · ');
+  })();
+  (function(){
+    var els=document.querySelectorAll('.reveal');
+    if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')});return;}
+    var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target);}})},{threshold:.14});
+    els.forEach(function(e){io.observe(e)});
+  })();
+</script>
+</body>
+</html>

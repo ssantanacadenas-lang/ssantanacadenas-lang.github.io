@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cotizador Inteligente · Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --accent:#1D4ED8;--accent-2:#4F86F0;--accent-ink:#fff;--wa:#25D366;--ok:#2E9E66;
+    --ink:#13182300;--ink:#131823;--muted:#737B8A;--line:#E5E8F0;--surface:#F2F5FA;--card:#fff;
+    --display:"Bricolage Grotesque",system-ui,sans-serif;--body:"Inter",system-ui,sans-serif;--mono:"JetBrains Mono",monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:var(--body);color:var(--ink);background:var(--surface);-webkit-font-smoothing:antialiased}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  input{font-family:inherit}
+  .shell{max-width:1000px;margin:0 auto;padding:24px 20px 50px}
+  .top{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+  .logo{display:flex;align-items:center;gap:11px}
+  .logo .m{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#fff;font-family:var(--display);font-weight:800;font-size:18px}
+  .logo b{font-family:var(--display);font-size:20px;display:block;line-height:1}.logo span{font-size:11.5px;color:var(--muted)}
+  .controls{margin-left:auto;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .ti{height:36px;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:0 11px;font-size:13px;width:120px;outline:none}
+  .swatches{display:flex;gap:6px}.sw{width:22px;height:22px;border-radius:999px;border:2px solid transparent}.sw.active{border-color:var(--ink);transform:scale(1.1)}
+  .lead{margin:0 0 16px}.lead h1{font-family:var(--display);font-weight:800;font-size:clamp(22px,3vw,30px);letter-spacing:-.02em;margin:0 0 4px}
+  .lead p{font-size:14px;color:var(--muted);margin:0;max-width:58ch}
+  .grid{display:grid;grid-template-columns:1fr 330px;gap:18px;align-items:start}
+  @media(max-width:820px){.grid{grid-template-columns:1fr}}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 6px 22px rgba(20,18,30,.05)}
+  .ph{padding:13px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+  .ph b{font-family:var(--display);font-size:15px}.ph .lk{font-size:12px;color:var(--accent);font-weight:600}
+  .it{display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--line)}
+  .it:last-child{border:none}
+  .it .e{width:38px;height:38px;border-radius:10px;background:color-mix(in srgb,var(--accent) 11%,transparent);display:grid;place-items:center;font-size:18px;flex:0 0 auto}
+  .it .inf{flex:1;min-width:0}.it .inf b{font-size:14px;display:block}.it .inf span{font-size:11.5px;color:var(--muted);font-family:var(--mono)}
+  .qty{display:flex;align-items:center;gap:9px}
+  .qty button{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);font-size:17px;font-weight:700;color:var(--ink);transition:.12s}
+  .qty button:hover{border-color:var(--accent);color:var(--accent)}
+  .qty .n{font-family:var(--mono);font-weight:700;font-size:14px;min-width:20px;text-align:center}
+  .quote{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;position:sticky;top:16px;box-shadow:0 6px 22px rgba(20,18,30,.05)}
+  .quote h3{font-family:var(--display);font-size:16px;margin:0 0 3px}.quote .code{font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:14px}
+  .qline{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px dashed var(--line)}
+  .qline .nm{color:var(--muted);max-width:64%}.qline .vl{font-family:var(--mono);font-weight:600}
+  .empty{font-size:13px;color:var(--muted);text-align:center;padding:18px 0}
+  .tots{margin-top:12px}
+  .totrow{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);padding:3px 0}
+  .totrow.grand{font-family:var(--display);font-weight:800;font-size:22px;color:var(--ink);margin-top:6px;padding-top:10px;border-top:2px solid var(--line)}
+  .totrow.grand .v{color:var(--accent)}
+  .wabtn{height:48px;border-radius:12px;background:var(--wa);color:#fff;font-weight:700;font-size:14px;width:100%;display:flex;align-items:center;justify-content:center;gap:9px;margin-top:14px}
+  .wabtn svg{width:18px;height:18px;fill:#fff}.wabtn:disabled{opacity:.45;cursor:not-allowed}
+  .dlbtn{height:44px;border-radius:11px;background:var(--surface);border:1px solid var(--line);font-weight:600;font-size:13.5px;width:100%;margin-top:8px}
+  .pay{margin-top:12px;font-size:11.5px;color:var(--muted);text-align:center;line-height:1.4}
+  .pay b{color:var(--ink)}
+  .credit{text-align:center;font-size:12px;color:var(--muted);margin-top:22px}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="top">
+    <div class="logo"><div class="m" id="lm">A</div><div><b id="bl">Altora</b><span>Cotizador inteligente · demo</span></div></div>
+    <div class="controls"><input class="ti" id="ib" value="Altora" maxlength="16"><div class="swatches" id="sw"></div></div>
+  </div>
+  <div class="lead"><h1>Cotización al toque, sin esperar al vendedor</h1>
+    <p>El cliente arma su cotización, ve el total en vivo y la confirma por WhatsApp. Tú recibes el detalle listo.</p></div>
+
+  <div class="grid">
+    <div class="panel">
+      <div class="ph"><b>Arma tu cotización</b><button class="lk" id="clear">Limpiar</button></div>
+      <div id="items"></div>
+    </div>
+    <div class="quote">
+      <h3>Tu cotización</h3><div class="code" id="code"></div>
+      <div id="lines"><div class="empty">Agrega ítems para cotizar 👆</div></div>
+      <div class="tots" id="tots" style="display:none">
+        <div class="totrow"><span>Neto</span><span class="v" id="neto"></span></div>
+        <div class="totrow"><span>IVA 19%</span><span class="v" id="iva"></span></div>
+        <div class="totrow grand"><span>Total</span><span class="v" id="total"></span></div>
+      </div>
+      <button class="wabtn" id="wa" disabled><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-8.6 15l-1.4 5 5.2-1.4A10 10 0 1012 2z"/></svg> Enviar por WhatsApp</button>
+      <button class="dlbtn" id="dl">⬇ Descargar cotización</button>
+      <div class="pay">Anticipo <b>50%</b> al confirmar · 50% a la entrega · incluye 1 ajuste</div>
+    </div>
+  </div>
+  <div class="credit">Demo interactiva · solución re-skineable · servicios de ejemplo</div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  function $(s){return document.querySelector(s);}
+  function clp(n){return "$"+Math.round(n).toLocaleString("es-CL");}
+  var brand="Altora";
+  var catalog=[
+    {e:"🌐",n:"Sitio web / landing",u:"c/u",p:280000},
+    {e:"🛒",n:"Tienda online",u:"c/u",p:450000},
+    {e:"🤖",n:"Vendedor IA WhatsApp",u:"mensual",p:180000},
+    {e:"📅",n:"Sistema de reservas",u:"c/u",p:220000},
+    {e:"🎨",n:"Identidad de marca",u:"c/u",p:160000},
+    {e:"⭐",n:"Captador de reseñas",u:"c/u",p:45000},
+    {e:"📊",n:"Panel de indicadores",u:"c/u",p:320000}
+  ];
+  var qty=catalog.map(function(){return 0;});
+  var code="COT-"+new Date().getFullYear()+"-"+Math.floor(1000+Math.random()*9000);
+  $("#code").textContent=code;
+
+  function items(){
+    $("#items").innerHTML=catalog.map(function(c,i){
+      return '<div class="it"><span class="e">'+c.e+'</span><span class="inf"><b>'+c.n+'</b><span>'+clp(c.p)+' · '+c.u+'</span></span><span class="qty"><button data-d="-1" data-i="'+i+'">−</button><span class="n" id="q'+i+'">0</span><button data-d="1" data-i="'+i+'">+</button></span></div>';
+    }).join("");
+    [].slice.call($("#items").querySelectorAll("[data-i]")).forEach(function(b){b.onclick=function(){var i=+b.dataset.i;qty[i]=Math.max(0,qty[i]+ +b.dataset.d);$("#q"+i).textContent=qty[i];render();};});
+  }
+  function render(){
+    var lines=catalog.map(function(c,i){return {c:c,q:qty[i]};}).filter(function(x){return x.q>0;});
+    if(!lines.length){$("#lines").innerHTML='<div class="empty">Agrega ítems para cotizar 👆</div>';$("#tots").style.display="none";$("#wa").disabled=true;return;}
+    $("#lines").innerHTML=lines.map(function(x){return '<div class="qline"><span class="nm">'+x.q+'× '+x.c.n+'</span><span class="vl">'+clp(x.c.p*x.q)+'</span></div>';}).join("");
+    var neto=lines.reduce(function(a,x){return a+x.c.p*x.q;},0),iva=neto*0.19;
+    $("#neto").textContent=clp(neto);$("#iva").textContent=clp(iva);$("#total").textContent=clp(neto+iva);
+    $("#tots").style.display="block";$("#wa").disabled=false;
+  }
+  function summary(){
+    var lines=catalog.map(function(c,i){return {c:c,q:qty[i]};}).filter(function(x){return x.q>0;});
+    var neto=lines.reduce(function(a,x){return a+x.c.p*x.q;},0),iva=neto*0.19;
+    return "COTIZACIÓN "+code+" · "+brand+"\n\n"+lines.map(function(x){return "- "+x.q+"× "+x.c.n+": "+clp(x.c.p*x.q);}).join("\n")+"\n\nNeto: "+clp(neto)+"\nIVA: "+clp(iva)+"\nTOTAL: "+clp(neto+iva)+"\n\nAnticipo 50% al confirmar · 50% a la entrega · incluye 1 ajuste.";
+  }
+  $("#wa").onclick=function(){window.open("https://wa.me/?text="+encodeURIComponent(summary()),"_blank");};
+  $("#dl").onclick=function(){var b=new Blob([summary()],{type:"text/plain"}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download=code+".txt";document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);};
+  $("#clear").onclick=function(){qty=catalog.map(function(){return 0;});items();render();};
+
+  var SW=[{c:"#1D4ED8",c2:"#4F86F0"},{c:"#0D9488",c2:"#2DD4BF"},{c:"#7C3AED",c2:"#A855F7"},{c:"#C2410C",c2:"#EA7A3C"},{c:"#16161A",c2:"#444"}];
+  function ac(o){document.documentElement.style.setProperty("--accent",o.c);document.documentElement.style.setProperty("--accent-2",o.c2);
+    var h=o.c.replace("#",""),r=parseInt(h.substr(0,2),16),g=parseInt(h.substr(2,2),16),b=parseInt(h.substr(4,2),16);
+    document.documentElement.style.setProperty("--accent-ink",(0.299*r+0.587*g+0.114*b)>150?"#131823":"#fff");
+    [].slice.call(document.querySelectorAll(".sw")).forEach(function(e){e.classList.toggle("active",e.dataset.c===o.c);});}
+  function bsw(){var s=$("#sw");s.innerHTML="";SW.forEach(function(o){var b=document.createElement("button");b.className="sw";b.style.background=o.c;b.dataset.c=o.c;b.onclick=function(){ac(o);};s.appendChild(b);});}
+  function ab(n){brand=n||"Marca";$("#bl").textContent=brand;$("#lm").textContent=brand.charAt(0).toUpperCase();}
+  $("#ib").addEventListener("input",function(e){ab(e.target.value);});
+  bsw();ac(SW[0]);ab("Altora");items();render();
+})();
+</script>
+</body>
+</html>

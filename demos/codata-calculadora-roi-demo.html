@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de ROI · Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --accent:#1FA871;--accent-2:#3DD9A0;--accent-ink:#04140C;--bad:#E0533D;
+    --ink:#E8F1EC;--muted:#86978F;--line:#22302B;--card:#15201B;--bg:#0A130F;
+    --display:"Bricolage Grotesque",system-ui,sans-serif;--body:"Inter",system-ui,sans-serif;--mono:"JetBrains Mono",monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:var(--body);color:var(--ink);
+    background:radial-gradient(90% 60% at 50% -10%,color-mix(in srgb,var(--accent) 20%,transparent),transparent 55%),var(--bg);
+    min-height:100vh;-webkit-font-smoothing:antialiased}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  input{font-family:inherit}
+  .shell{max-width:1040px;margin:0 auto;padding:26px 22px 56px}
+  .top{display:flex;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+  .logo{display:flex;align-items:center;gap:11px}
+  .logo .m{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:var(--accent-ink);font-family:var(--display);font-weight:800;font-size:18px}
+  .logo b{font-family:var(--display);font-size:20px;display:block;line-height:1;color:#fff}.logo span{font-size:11.5px;color:var(--muted)}
+  .controls{margin-left:auto;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .ti{height:36px;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:0 11px;font-size:13px;width:120px;outline:none;color:#fff}
+  .swatches{display:flex;gap:6px}.sw{width:22px;height:22px;border-radius:999px;border:2px solid transparent}.sw.active{border-color:#fff;transform:scale(1.1)}
+  .lead{margin:0 0 18px}.lead h1{font-family:var(--display);font-weight:800;font-size:clamp(24px,3.4vw,34px);letter-spacing:-.02em;margin:0 0 5px;color:#fff}
+  .lead p{font-size:14.5px;color:var(--muted);margin:0;max-width:60ch}
+  .grid{display:grid;grid-template-columns:340px 1fr;gap:18px;align-items:start}
+  @media(max-width:820px){.grid{grid-template-columns:1fr}}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px}
+  .sl{margin-bottom:20px}
+  .sl .l{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px}
+  .sl .l span{font-size:13px;color:var(--muted)}
+  .sl .l b{font-family:var(--mono);font-weight:700;font-size:15px;color:#fff}
+  input[type=range]{-webkit-appearance:none;width:100%;height:6px;border-radius:999px;background:var(--line);outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:999px;background:linear-gradient(135deg,var(--accent),var(--accent-2));cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+  input[type=range]::-moz-range-thumb{width:22px;height:22px;border:none;border-radius:999px;background:var(--accent);cursor:pointer}
+  .out{display:flex;flex-direction:column;gap:16px}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media(max-width:560px){.hero{grid-template-columns:1fr}}
+  .hk b{font-family:var(--display);font-weight:800;font-size:clamp(22px,3.5vw,30px);display:block;line-height:1;color:#fff}
+  .hk.green b{color:var(--accent-2)}
+  .hk span{font-size:11.5px;color:var(--muted)}
+  .hk .sub{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:3px}
+  .chart{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+  .ch{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+  .ch b{font-family:var(--display);font-size:15px;color:#fff}
+  .leg{display:flex;gap:14px;font-size:11.5px;color:var(--muted)}
+  .leg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:middle}
+  .pb{padding:16px 18px}
+  canvas{display:block;width:100%;height:240px}
+  .pbk{margin-top:6px;font-size:13px;color:var(--muted);text-align:center}
+  .pbk b{color:var(--accent-2)}
+  .credit{text-align:center;font-size:12px;color:var(--muted);margin-top:24px}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="top">
+    <div class="logo"><div class="m" id="lm">R</div><div><b id="bl">Retorno</b><span>Calculadora de ROI · demo</span></div></div>
+    <div class="controls"><input class="ti" id="ib" value="Retorno" maxlength="16"><div class="swatches" id="sw"></div></div>
+  </div>
+  <div class="lead"><h1>Cuánto te ahorra, en plata y en cuánto se paga sola</h1>
+    <p>Mueve los valores de tu caso y mira el ahorro real, el retorno anual y en qué mes recuperas la inversión.</p></div>
+
+  <div class="grid">
+    <div class="panel">
+      <div class="sl"><div class="l"><span>Horas/semana en la tarea manual</span><b id="vH">10 h</b></div><input type="range" id="sH" min="1" max="40" value="10"></div>
+      <div class="sl"><div class="l"><span>Valor de la hora</span><b id="vV">$6.000</b></div><input type="range" id="sV" min="2000" max="20000" step="500" value="6000"></div>
+      <div class="sl"><div class="l"><span>% que se automatiza</span><b id="vP">70%</b></div><input type="range" id="sP" min="30" max="95" value="70"></div>
+      <div class="sl"><div class="l"><span>Costo mensual de la solución</span><b id="vC">$80.000</b></div><input type="range" id="sC" min="20000" max="300000" step="5000" value="80000"></div>
+      <div class="sl"><div class="l"><span>Inversión inicial</span><b id="vI">$400.000</b></div><input type="range" id="sI" min="0" max="1500000" step="50000" value="400000"></div>
+    </div>
+
+    <div class="out">
+      <div class="hero">
+        <div class="hk green"><b id="oMes">$0</b><span>ahorro mensual neto</span><div class="sub" id="oHrs">0 h/mes recuperadas</div></div>
+        <div class="hk green"><b id="oAnio">$0</b><span>ahorro al año</span><div class="sub" id="oRoi">ROI 0%</div></div>
+        <div class="hk"><b id="oPay">—</b><span>se paga sola en</span><div class="sub">payback</div></div>
+      </div>
+      <div class="chart">
+        <div class="ch"><b>Ahorro acumulado vs inversión</b><div class="leg"><span><i style="background:var(--accent)"></i>Ahorro</span><span><i style="background:var(--bad)"></i>Inversión</span></div></div>
+        <div class="pb"><canvas id="cv"></canvas><div class="pbk" id="pbk"></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="credit">Demo interactiva · solución re-skineable · proyección a 12 meses</div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  function $(s){return document.querySelector(s);}
+  function clp(n){return "$"+Math.round(n).toLocaleString("es-CL");}
+  var cv=$("#cv"),ctx=cv.getContext("2d"),W=0,H=0,dpr=Math.min(window.devicePixelRatio||1,2);
+  function resize(){var r=cv.getBoundingClientRect();W=r.width;H=r.height;cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);}
+  window.addEventListener("resize",function(){resize();calc(1);});
+  function getC(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+
+  function vals(){return {h:+$("#sH").value,v:+$("#sV").value,p:+$("#sP").value,c:+$("#sC").value,i:+$("#sI").value};}
+  function label(){var x=vals();
+    $("#vH").textContent=x.h+" h";$("#vV").textContent=clp(x.v);$("#vP").textContent=x.p+"%";$("#vC").textContent=clp(x.c);$("#vI").textContent=clp(x.i);}
+
+  var anim=null;
+  function calc(prog){
+    var x=vals();
+    var hrsMes=x.h*4.33*(x.p/100);
+    var ahorroBruto=hrsMes*x.v;
+    var ahorroNeto=ahorroBruto-x.c;
+    var anual=ahorroNeto*12;
+    var roi=x.i>0?Math.round((anual-x.i)/x.i*100):(ahorroNeto>0?999:0);
+    $("#oMes").textContent=clp(ahorroNeto);
+    $("#oHrs").textContent=Math.round(hrsMes)+" h/mes recuperadas";
+    $("#oAnio").textContent=clp(anual);
+    $("#oRoi").textContent="ROI "+roi+"%";
+    // payback
+    var pay= ahorroNeto>0 ? x.i/ahorroNeto : Infinity;
+    $("#oPay").textContent= ahorroNeto<=0 ? "no se paga" : (pay<1?"< 1 mes":(pay<=18?Math.ceil(pay)+" meses":"+18 meses"));
+    drawChart(x,ahorroNeto,prog);
+  }
+  function drawChart(x,neto,prog){
+    ctx.clearRect(0,0,W,H);
+    var pad={l:8,r:8,t:14,b:22},months=12;
+    var cum=[];for(var m=1;m<=months;m++)cum.push(neto*m);
+    var maxV=Math.max(x.i,cum[months-1],1)*1.08;
+    function X(m){return pad.l+(m/(months-1))*(W-pad.l-pad.r);}
+    function Y(v){return H-pad.b-(v/maxV)*(H-pad.t-pad.b);}
+    // investment line
+    ctx.strokeStyle=getC("--bad");ctx.lineWidth=2;ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(pad.l,Y(x.i));ctx.lineTo(W-pad.r,Y(x.i));ctx.stroke();ctx.setLineDash([]);
+    // cumulative area
+    var acc=getC("--accent"),acc2=getC("--accent-2");
+    var n=Math.max(1,Math.floor(months*prog));
+    var grd=ctx.createLinearGradient(0,pad.t,0,H-pad.b);grd.addColorStop(0,"rgba(31,168,113,.35)");grd.addColorStop(1,"rgba(31,168,113,.02)");
+    ctx.beginPath();ctx.moveTo(X(0),Y(0));
+    for(var m=0;m<n;m++)ctx.lineTo(X(m),Y(Math.max(0,cum[m])));
+    ctx.lineTo(X(n-1),Y(0));ctx.closePath();ctx.fillStyle=grd;ctx.fill();
+    ctx.beginPath();ctx.lineWidth=2.5;ctx.strokeStyle=acc2;
+    for(var k=0;k<n;k++){var px=X(k),py=Y(Math.max(0,cum[k]));if(k===0)ctx.moveTo(px,py);else ctx.lineTo(px,py);}
+    ctx.stroke();
+    // payback point
+    if(neto>0){var pm=x.i/neto;if(pm<=months&&prog>=1){var px=X(Math.min(months-1,pm-1)),py=Y(x.i);ctx.fillStyle=acc2;ctx.beginPath();ctx.arc(px,py,5,0,7);ctx.fill();ctx.strokeStyle="#fff";ctx.lineWidth=2;ctx.stroke();}}
+    // x labels
+    ctx.fillStyle="rgba(255,255,255,.4)";ctx.font="10px Inter";ctx.textAlign="center";
+    [0,3,6,9,11].forEach(function(m){ctx.fillText("M"+(m+1),X(m),H-7);});
+    if(prog>=1){
+      var pm=neto>0?x.i/neto:Infinity;
+      $("#pbk").innerHTML= neto<=0 ? "Con estos valores aún no conviene — sube el % automatizado o baja el costo." :
+        (pm<=12? "Recuperas la inversión en el <b>mes "+Math.ceil(pm)+"</b> y de ahí en adelante es ganancia." : "La inversión se recupera <b>después del año 1</b>.");
+    }
+  }
+  function animate(){var s=null;function step(t){if(!s)s=t;var pr=Math.min(1,(t-s)/600);calc(pr);if(pr<1)requestAnimationFrame(step);}requestAnimationFrame(step);}
+
+  ["sH","sV","sP","sC","sI"].forEach(function(id){$("#"+id).addEventListener("input",function(){label();calc(1);});});
+
+  var SW=[{c:"#1FA871",c2:"#3DD9A0",ink:"#04140C"},{c:"#4E46E5",c2:"#8B7BF5",ink:"#fff"},{c:"#2563EB",c2:"#5B8DEF",ink:"#fff"},{c:"#C2410C",c2:"#EA7A3C",ink:"#fff"},{c:"#B0418A",c2:"#D86BB0",ink:"#fff"}];
+  function ac(o){document.documentElement.style.setProperty("--accent",o.c);document.documentElement.style.setProperty("--accent-2",o.c2);document.documentElement.style.setProperty("--accent-ink",o.ink);
+    [].slice.call(document.querySelectorAll(".sw")).forEach(function(e){e.classList.toggle("active",e.dataset.c===o.c);});calc(1);}
+  function bsw(){var s=$("#sw");s.innerHTML="";SW.forEach(function(o){var b=document.createElement("button");b.className="sw";b.style.background=o.c;b.dataset.c=o.c;b.onclick=function(){ac(o);};s.appendChild(b);});}
+  function ab(n){$("#bl").textContent=n||"Marca";$("#lm").textContent=(n||"M").charAt(0).toUpperCase();}
+  $("#ib").addEventListener("input",function(e){ab(e.target.value);});
+  bsw();ac(SW[0]);ab("Retorno");label();resize();animate();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema de Reservas · Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --accent:#9333EA;--accent-2:#B66CF5;--accent-ink:#fff;--wa:#25D366;--ok:#2E9E66;
+    --ink:#171221;--muted:#83798F;--line:#ECE6F2;--surface:#F6F2FB;--card:#fff;
+    --display:"Bricolage Grotesque",system-ui,sans-serif;--body:"Inter",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:var(--body);color:var(--ink);
+    background:radial-gradient(70% 50% at 50% 0%,color-mix(in srgb,var(--accent) 13%,transparent),transparent 60%),var(--surface);
+    min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 18px 50px;-webkit-font-smoothing:antialiased}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  input{font-family:inherit}
+  .top{width:100%;max-width:560px;display:flex;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+  .logo{display:flex;align-items:center;gap:11px}
+  .logo .m{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#fff;font-family:var(--display);font-weight:800;font-size:17px}
+  .logo b{font-family:var(--display);font-size:19px;display:block;line-height:1}.logo span{font-size:11.5px;color:var(--muted)}
+  .controls{margin-left:auto;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .ti{height:36px;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:0 11px;font-size:13px;width:120px;outline:none}
+  .swatches{display:flex;gap:6px}.sw{width:22px;height:22px;border-radius:999px;border:2px solid transparent}.sw.active{border-color:var(--ink);transform:scale(1.1)}
+  .card{width:100%;max-width:560px;background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:0 20px 60px rgba(20,18,40,.08);overflow:hidden}
+  .head{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;padding:22px 24px;transition:background .35s}
+  .head h2{font-family:var(--display);font-weight:800;font-size:21px;margin:0 0 3px}
+  .head p{font-size:13px;opacity:.92;margin:0}
+  .steps{display:flex;gap:6px;padding:14px 24px 0}
+  .steps i{height:4px;flex:1;border-radius:999px;background:var(--line);transition:.3s}
+  .steps i.on{background:var(--accent)}
+  .body{padding:18px 24px 24px}
+  .lab{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:11px}
+  .opt{display:flex;align-items:center;gap:13px;border:1px solid var(--line);border-radius:13px;padding:14px;margin-bottom:10px;transition:.12s;width:100%;text-align:left}
+  .opt:hover{border-color:var(--accent)}.opt.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 6%,transparent)}
+  .opt .e{width:40px;height:40px;border-radius:11px;background:color-mix(in srgb,var(--accent) 12%,transparent);display:grid;place-items:center;font-size:19px;flex:0 0 auto}
+  .opt .i{flex:1}.opt .i b{font-size:14.5px;display:block}.opt .i span{font-size:12px;color:var(--muted)}
+  .opt .pr{font-family:var(--display);font-weight:700;font-size:14px}
+  .row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+  .day{flex:1;min-width:64px;border:1px solid var(--line);border-radius:12px;padding:11px 6px;text-align:center;transition:.12s}
+  .day:hover{border-color:var(--accent)}.day.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .day .dn{font-size:11px;opacity:.75}.day .dd{font-family:var(--display);font-weight:700;font-size:18px}
+  .slots{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .slot{border:1px solid var(--line);border-radius:10px;padding:11px 4px;text-align:center;font-size:13.5px;font-weight:600;transition:.12s}
+  .slot:hover{border-color:var(--accent)}.slot.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .slot.off{opacity:.35;text-decoration:line-through;pointer-events:none}
+  .nav{display:flex;gap:10px;margin-top:18px}
+  .btn{height:50px;border-radius:13px;font-weight:700;font-size:15px;flex:1;display:flex;align-items:center;justify-content:center;gap:8px;transition:filter .15s}
+  .btn-p{background:var(--accent);color:var(--accent-ink)}.btn-p:hover{filter:brightness(1.06)}.btn-p:disabled{opacity:.45;cursor:not-allowed}
+  .btn-g{background:var(--surface);border:1px solid var(--line);color:var(--ink);flex:0 0 auto;padding:0 18px}
+  .step{display:none}.step.on{display:block;animation:f .25s ease}@keyframes f{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
+  .summary{text-align:center;padding:8px 0}
+  .summary .ok{width:62px;height:62px;border-radius:999px;background:color-mix(in srgb,var(--ok) 15%,transparent);display:grid;place-items:center;margin:0 auto 12px;font-size:30px}
+  .summary h3{font-family:var(--display);font-size:21px;margin:0 0 4px}
+  .summary .det{background:var(--surface);border-radius:14px;padding:14px 16px;text-align:left;margin:14px 0;font-size:13.5px}
+  .summary .det div{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed var(--line)}
+  .summary .det div:last-child{border:none}.summary .det b{font-weight:600}
+  .wabtn{height:50px;border-radius:13px;background:var(--wa);color:#fff;font-weight:700;font-size:15px;width:100%;display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:8px}
+  .wabtn svg{width:18px;height:18px;fill:#fff}
+  .icsbtn{height:46px;border-radius:12px;background:var(--surface);border:1px solid var(--line);font-weight:600;font-size:13.5px;width:100%}
+  .credit{font-size:12px;color:var(--muted);margin-top:18px;text-align:center}
+</style>
+</head>
+<body>
+  <div class="top">
+    <div class="logo"><div class="m" id="lm">N</div><div><b id="bl">Nimbo</b><span>Sistema de reservas · demo</span></div></div>
+    <div class="controls"><input class="ti" id="ib" value="Nimbo" maxlength="16"><div class="swatches" id="sw"></div></div>
+  </div>
+
+  <div class="card">
+    <div class="head"><h2 id="bizName">Nimbo</h2><p>Reserva tu hora en 30 segundos</p></div>
+    <div class="steps" id="steps"><i class="on"></i><i></i><i></i><i></i></div>
+    <div class="body">
+      <div class="step on" id="s0"><div class="lab">1 · Elige el servicio</div><div id="services"></div></div>
+      <div class="step" id="s1"><div class="lab">2 · Con quién</div><div id="pros"></div></div>
+      <div class="step" id="s2"><div class="lab">3 · Día y hora</div><div class="row" id="days"></div><div class="slots" id="slots" style="margin-top:8px"></div></div>
+      <div class="step" id="s3"><div class="summary"><div class="ok">✓</div><h3>¡Reserva lista!</h3><div class="det" id="det"></div></div>
+        <button class="wabtn" id="wa"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-8.6 15l-1.4 5 5.2-1.4A10 10 0 1012 2z"/></svg> Confirmar por WhatsApp</button>
+        <button class="icsbtn" id="ics">📅 Agregar a mi calendario</button>
+      </div>
+      <div class="nav" id="nav"><button class="btn btn-g" id="back" style="display:none">‹</button><button class="btn btn-p" id="next" disabled>Continuar</button></div>
+    </div>
+  </div>
+  <div class="credit">Demo interactiva · solución re-skineable · servicios de ejemplo</div>
+
+<script>
+(function(){
+  "use strict";
+  function $(s){return document.querySelector(s);}
+  function clp(n){return "$"+n.toLocaleString("es-CL");}
+  var brand="Nimbo";
+  var services=[["✂️","Corte de pelo","45 min",12000],["🎨","Color + corte","2 h",38000],["💅","Manicure","40 min",15000],["🧖","Tratamiento capilar","1 h",22000]];
+  var pros=[["👩","Valentina","Estilista senior"],["🧑","Matías","Colorista"],["👩‍🦰","Javiera","Manicurista"]];
+  var slots=["10:00","10:45","11:30","12:15","15:00","15:45","16:30","17:15"];
+  var sel={svc:null,pro:null,day:null,slot:null};
+  var step=0;
+
+  function days(){
+    var d=$("#days");d.innerHTML="";var names=["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"];
+    for(var i=1;i<=5;i++){(function(off){var dt=new Date();dt.setDate(dt.getDate()+off);
+      var b=document.createElement("button");b.className="day";b.innerHTML='<div class="dn">'+names[dt.getDay()]+'</div><div class="dd">'+dt.getDate()+'</div>';
+      b.onclick=function(){sel.day=dt;[].slice.call(d.children).forEach(function(x){x.classList.remove("on");});b.classList.add("on");renderSlots();chk();};d.appendChild(b);})(i);}
+  }
+  function renderSlots(){
+    var c=$("#slots");c.innerHTML="";
+    slots.forEach(function(s,i){var b=document.createElement("button");b.className="slot"+(i%5===3?" off":"");b.textContent=s;
+      b.onclick=function(){sel.slot=s;[].slice.call(c.children).forEach(function(x){x.classList.remove("on");});b.classList.add("on");chk();};c.appendChild(b);});
+  }
+  function services_(){
+    var c=$("#services");c.innerHTML="";
+    services.forEach(function(s,i){var b=document.createElement("button");b.className="opt";b.innerHTML='<span class="e">'+s[0]+'</span><span class="i"><b>'+s[1]+'</b><span>'+s[2]+'</span></span><span class="pr">'+clp(s[3])+'</span>';
+      b.onclick=function(){sel.svc=i;[].slice.call(c.children).forEach(function(x){x.classList.remove("on");});b.classList.add("on");chk();};c.appendChild(b);});
+  }
+  function pros_(){
+    var c=$("#pros");c.innerHTML="";
+    pros.forEach(function(p,i){var b=document.createElement("button");b.className="opt";b.innerHTML='<span class="e">'+p[0]+'</span><span class="i"><b>'+p[1]+'</b><span>'+p[2]+'</span></span>';
+      b.onclick=function(){sel.pro=i;[].slice.call(c.children).forEach(function(x){x.classList.remove("on");});b.classList.add("on");chk();};c.appendChild(b);});
+  }
+  function chk(){
+    var ok=(step===0&&sel.svc!==null)||(step===1&&sel.pro!==null)||(step===2&&sel.day&&sel.slot);
+    $("#next").disabled=!ok;
+  }
+  function go(n){
+    step=n;
+    [].slice.call(document.querySelectorAll(".step")).forEach(function(e,i){e.classList.toggle("on",i===n);});
+    [].slice.call($("#steps").children).forEach(function(e,i){e.classList.toggle("on",i<=n);});
+    $("#back").style.display=n>0&&n<3?"flex":"none";
+    $("#nav").style.display=n===3?"none":"flex";
+    $("#next").textContent=n===2?"Reservar":"Continuar";
+    if(n===3)fill();else chk();
+  }
+  function fill(){
+    var s=services[sel.svc],p=pros[sel.pro];
+    var dstr=sel.day.toLocaleDateString("es-CL",{weekday:"long",day:"numeric",month:"long"});
+    $("#det").innerHTML='<div><span>Servicio</span><b>'+s[1]+'</b></div><div><span>Con</span><b>'+p[1]+'</b></div><div><span>Fecha</span><b>'+dstr+'</b></div><div><span>Hora</span><b>'+sel.slot+'</b></div><div><span>Valor</span><b>'+clp(s[3])+'</b></div>';
+  }
+  $("#next").onclick=function(){if(step<3)go(step+1);};
+  $("#back").onclick=function(){if(step>0)go(step-1);};
+  $("#wa").onclick=function(){var s=services[sel.svc],p=pros[sel.pro];window.open("https://wa.me/?text="+encodeURIComponent("Hola "+brand+", confirmo mi reserva: "+s[1]+" con "+p[1]+" el "+sel.day.toLocaleDateString("es-CL")+" a las "+sel.slot+"."),"_blank");};
+  $("#ics").onclick=function(){
+    var s=services[sel.svc],dt=new Date(sel.day),hm=sel.slot.split(":");dt.setHours(+hm[0],+hm[1],0,0);
+    function f(d){return d.toISOString().replace(/[-:]/g,"").split(".")[0]+"Z";}
+    var end=new Date(dt.getTime()+45*60000);
+    var ics="BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nSUMMARY:"+s[1]+" · "+brand+"\r\nDTSTART:"+f(dt)+"\r\nDTEND:"+f(end)+"\r\nEND:VEVENT\r\nEND:VCALENDAR";
+    var b=new Blob([ics],{type:"text/calendar"}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="reserva.ics";document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);
+  };
+
+  var SW=[{c:"#9333EA",c2:"#B66CF5"},{c:"#E5356B",c2:"#FF7BA3"},{c:"#2563EB",c2:"#5B8DEF"},{c:"#0D9488",c2:"#2DD4BF"},{c:"#C2410C",c2:"#EA7A3C"}];
+  function ac(o){document.documentElement.style.setProperty("--accent",o.c);document.documentElement.style.setProperty("--accent-2",o.c2);
+    var h=o.c.replace("#",""),r=parseInt(h.substr(0,2),16),g=parseInt(h.substr(2,2),16),b=parseInt(h.substr(4,2),16);
+    document.documentElement.style.setProperty("--accent-ink",(0.299*r+0.587*g+0.114*b)>150?"#171221":"#fff");
+    [].slice.call(document.querySelectorAll(".sw")).forEach(function(e){e.classList.toggle("active",e.dataset.c===o.c);});}
+  function bsw(){var s=$("#sw");s.innerHTML="";SW.forEach(function(o){var b=document.createElement("button");b.className="sw";b.style.background=o.c;b.dataset.c=o.c;b.onclick=function(){ac(o);};s.appendChild(b);});}
+  function ab(n){brand=n||"Marca";$("#bl").textContent=brand;$("#lm").textContent=brand.charAt(0).toUpperCase();$("#bizName").textContent=brand;}
+  $("#ib").addEventListener("input",function(e){ab(e.target.value);});
+  bsw();ac(SW[0]);ab("Nimbo");services_();pros_();days();renderSlots();
+})();
+</script>
+</body>
+</html>
