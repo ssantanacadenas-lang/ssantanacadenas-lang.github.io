@@ -1101,7 +1101,7 @@ function holoIC(n){
 var fan=document.getElementById('fan');
 var LITE=matchMedia('(max-width:820px)').matches||(navigator.hardwareConcurrency&&navigator.hardwareConcurrency<=4);
 if(LITE)document.documentElement.classList.add('lite');
-var RING=P.slice(0,LITE?6:15);
+var RING=P.slice(0,LITE?7:15);
 RING.forEach(function(p,i){
   var b=document.createElement('button');
   b.className='card hoverable '+p.g;
@@ -1116,7 +1116,7 @@ RING.forEach(function(p,i){
 /* ================= EFECTO 1: parallax del abanico ================= */
 var stage=document.getElementById('stage'), rmq=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 var ringAng=0, ringVel=LITE?.1:.14, baseVel=LITE?.1:.14, tilt=-7, tTilt=-7, tYaw=0, dragging=null, dragged=false;
-function setR(){var R=Math.min(Math.max(innerWidth*.30,222),392);if(LITE)R=218;document.documentElement.style.setProperty('--ringR',R+'px');}
+function setR(){var R=Math.min(Math.max(innerWidth*.30,222),392);if(LITE)R=200;document.documentElement.style.setProperty('--ringR',R+'px');}
 setR();addEventListener('resize',setR);
 if(!rmq){
   if(matchMedia('(pointer:fine)').matches){
