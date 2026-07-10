@@ -98,12 +98,17 @@
     $("#paper").innerHTML='<div class="skel" style="width:50%;height:18px;margin-bottom:16px"></div><div class="skel"></div><div class="skel" style="width:95%"></div><div class="skel" style="width:88%"></div><div class="skel" style="width:70%;margin-top:14px"></div>';
     var sys="Eres asistente que redacta documentos comerciales en español de Chile, formales y bien estructurados. Genera un "+t.n+" completo y profesional con los datos entregados. Incluye encabezado, cuerpo y cierre apropiados. Si faltan datos, usa placeholders entre [corchetes]. Responde solo el documento, sin comentarios.";
     var usr=t.l1+": "+($("#f1").value||"[—]")+"\n"+t.l2+": "+($("#f2").value||"[—]")+"\nDetalles: "+($("#f3").value||"[—]")+"\nEmisor: "+brand;
-    fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:1000,system:sys,messages:[{role:"user",content:usr}]})
-    }).then(function(r){return r.json();}).then(function(d){
-      var t2="";if(d&&d.content)t2=d.content.filter(function(i){return i.type==="text";}).map(function(i){return i.text;}).join("").trim();
-      docText=t2.replace(/```/g,"").trim();$("#paper").textContent=docText||"No se pudo generar.";
-    }).catch(function(){$("#paper").innerHTML='<div class="empty">No se pudo generar ahora. Reintenta.</div>';}).then(function(){$("#go").disabled=false;});
+    (function(){
+      var f1v=$("#f1").value||"[Cliente]",f2v=$("#f2").value||"[Detalle]",f3v=$("#f3").value||"";
+      var hoy=new Date(),MES=["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+      var fecha="Santiago, "+hoy.getDate()+" de "+MES[hoy.getMonth()]+" de "+hoy.getFullYear();
+      var tt=t.n,doc2="";
+      if(tt==="Cotización")doc2=fecha+"\n\nCOTIZACIÓN N.º [0001]\n\nSeñor(a): "+f1v+"\nDe: "+brand+"\n\nPor el presente, cotizamos lo siguiente:\n\nServicio / producto: "+f2v+(f3v?"\nDetalle: "+f3v:"")+"\nValor neto: $[valor]\nIVA (19%): $[iva]\nTOTAL: $[total]\n\nValidez de la oferta: 15 días.\nForma de pago: [transferencia / tarjeta].\nPlazo de entrega: [a convenir].\n\nQuedamos atentos a su confirmación.\n\nAtentamente,\n"+brand;
+      else if(tt==="Contrato simple")doc2="CONTRATO DE PRESTACIÓN DE SERVICIOS\n\n"+fecha+"\n\nEntre "+brand+", en adelante «el Prestador», y "+f1v+", en adelante «el Cliente», se acuerda lo siguiente:\n\nPRIMERO — Objeto: "+f2v+".\n"+(f3v?"SEGUNDO — Detalles y alcance: "+f3v+".\nTERCERO":"SEGUNDO")+" — Precio y forma de pago: $[valor], pagadero según [condición].\nCUARTO — Plazo: el servicio se ejecutará entre el [fecha inicio] y el [fecha término].\nQUINTO — Ambas partes declaran conocer y aceptar los términos señalados.\n\n\n_____________________          _____________________\n"+brand+"          "+f1v;
+      else if(tt==="Carta formal")doc2=fecha+"\n\nSeñor(a)\n"+f1v+"\nPresente\n\nDe nuestra consideración:\n\nJunto con saludar cordialmente, nos dirigimos a usted con motivo de "+f2v+"."+(f3v?"\n\n"+f3v:"")+"\n\nSin otro particular, y quedando a su disposición para cualquier consulta, le saluda atentamente,\n\n"+brand;
+      else doc2="INFORME\n\n"+fecha+"\nDirigido a: "+f1v+"\nElaborado por: "+brand+"\n\nTEMA: "+f2v+"\n\n1. ANTECEDENTES\n"+(f3v||"[Contexto y antecedentes del informe]")+"\n\n2. DESARROLLO\n[Análisis principal, datos y hallazgos]\n\n3. CONCLUSIONES\n[Síntesis del estado actual]\n\n4. RECOMENDACIONES\n[Próximos pasos sugeridos]";
+      setTimeout(function(){docText=doc2;$("#paper").textContent=docText;$("#go").disabled=false;},800+Math.random()*600);
+    })();
   };
   $("#copy").onclick=function(){if(docText)navigator.clipboard&&navigator.clipboard.writeText(docText);};
   $("#dl").onclick=function(){if(!docText)return;var b=new Blob([docText],{type:"text/plain"}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download=types[sel].n+".txt";document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);};

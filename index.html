@@ -159,6 +159,26 @@ section{padding:clamp(70px,12vh,130px) 0;position:relative;overflow:hidden}
 .vi p{color:var(--mut);font-size:15px;max-width:58ch;line-height:1.6}
 .vdisc{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 .vd{font-family:var(--mono);font-size:10.5px;letter-spacing:1px;text-transform:uppercase;color:var(--mut);border:1px solid var(--line);border-radius:999px;padding:7px 13px}
+/* ===== micro-pantallas: tarjetas de la rueda + modal ===== */
+.mws{position:relative;z-index:1;display:flex;gap:5px}
+.mw{width:27px;height:19px;border-radius:4px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.32);position:relative;overflow:hidden}
+.mw::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:rgba(255,255,255,.28)}
+.mw::after,.mwv::after{content:"";position:absolute;inset:6px 3px 2px}
+.mw.doc::after,.mwv.doc::after{background:repeating-linear-gradient(180deg,rgba(255,255,255,.55) 0 1.5px,transparent 1.5px 4.5px)}
+.mw.chart::after,.mwv.chart::after{background:linear-gradient(0deg,rgba(255,255,255,.62) 0 40%,transparent 40%) 1px 100%/4px 100% no-repeat,linear-gradient(0deg,rgba(255,255,255,.62) 0 72%,transparent 72%) 7px 100%/4px 100% no-repeat,linear-gradient(0deg,rgba(255,255,255,.62) 0 55%,transparent 55%) 13px 100%/4px 100% no-repeat,linear-gradient(0deg,rgba(255,255,255,.62) 0 90%,transparent 90%) 19px 100%/4px 100% no-repeat}
+.mw.chat::after,.mwv.chat::after{background:radial-gradient(circle at 28% 32%,rgba(255,255,255,.7) 0 3px,transparent 3.4px),radial-gradient(circle at 70% 70%,rgba(255,255,255,.45) 0 3px,transparent 3.4px)}
+.mw.cal::after,.mwv.cal::after{background:repeating-linear-gradient(90deg,rgba(255,255,255,.5) 0 1.6px,transparent 1.6px 6px),repeating-linear-gradient(180deg,rgba(255,255,255,.5) 0 1.6px,transparent 1.6px 5px)}
+.mw.qr::after,.mwv.qr::after{background:conic-gradient(rgba(255,255,255,.62) 90deg,transparent 90deg 180deg,rgba(255,255,255,.62) 180deg 270deg,transparent 270deg);background-size:9px 9px}
+.mw.gauge::after,.mwv.gauge::after{background:radial-gradient(circle at 50% 115%,transparent 0 5px,rgba(255,255,255,.65) 5px 7.5px,transparent 7.5px)}
+.mw.star::after,.mwv.star::after{background:radial-gradient(circle at 50% 45%,rgba(255,255,255,.75) 0 3.5px,transparent 4px),radial-gradient(circle at 22% 70%,rgba(255,255,255,.4) 0 2px,transparent 2.4px),radial-gradient(circle at 78% 70%,rgba(255,255,255,.4) 0 2px,transparent 2.4px)}
+#mrel{margin-top:14px}
+#mrel .mrt{font-family:var(--mono);font-size:10px;letter-spacing:.8px;text-transform:uppercase;opacity:.62;margin-bottom:8px}
+#mrel .mrg{display:flex;gap:8px;flex-wrap:wrap}
+.mrb{display:flex;align-items:center;gap:8px;background:rgba(127,127,140,.1);border:1px solid rgba(127,127,140,.28);border-radius:12px;padding:7px 12px 7px 8px;cursor:pointer;color:inherit;font-size:12.5px;font-family:inherit;transition:transform .2s,border-color .2s}
+.mrb:hover{transform:translateY(-1px);border-color:rgba(127,127,140,.6)}
+.mrb.on{border-color:#2FBF71;box-shadow:0 0 0 1px #2FBF71 inset}
+.mrb .mwv{width:30px;height:21px;border-radius:4px;background:rgba(127,127,140,.14);border:1px solid rgba(127,127,140,.3);position:relative;overflow:hidden;flex:none}
+.mrb .mwv::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:rgba(127,127,140,.3)}
 /* footer */
 footer{padding:clamp(70px,12vh,120px) 0 34px}
 .fbig{font-weight:300;font-size:clamp(38px,7.6vw,96px);letter-spacing:-.03em;line-height:1.05}
@@ -347,7 +367,7 @@ footer{padding:clamp(70px,12vh,120px) 0 34px}
 #vine .lf.on{transform:scale(1)}
 @media(max-width:760px){#vine{width:50px;opacity:.55}}
 /* ===== divisores de categoría ===== */
-.cdiv{grid-column:1/-1;font-family:var(--mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--dim);padding:18px 2px 8px;border-bottom:1px solid var(--line)}
+/* .cdiv v3: estilos arriba */
 /* ===== FIGURAS 3D NIVEL DIOS ===== */
 .f3d{position:absolute;z-index:0;pointer-events:none}
 @media(max-width:700px){.f3d{display:none}}
@@ -448,19 +468,89 @@ section>.wrap{position:relative;z-index:1}
 .chip:hover{border-color:var(--ink);color:var(--ink)}
 .chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
 .cat-grid{max-width:1200px;margin:0 auto;padding:16px clamp(20px,5vw,56px) 80px;display:grid;grid-template-columns:repeat(auto-fill,minmax(176px,1fr));gap:9px}
-.ct{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:12px;padding:9px;cursor:pointer;text-align:left;
-  transform-style:preserve-3d;will-change:transform;transition:transform .3s ease,box-shadow .3s,opacity .55s,translate .55s;opacity:0;translate:0 28px;transform:perspective(800px) rotateX(18deg);transform-origin:50% 0}
+/* .ct v3: estilos arriba */
+/* ===== V3: FOIL HOLOGRÁFICO + ÁLBUM DE LÁMINAS + CHATS VIVOS ===== */
+@keyframes shineSweep{0%{transform:translateX(-130%) skewX(-18deg)}100%{transform:translateX(230%) skewX(-18deg)}}
+@keyframes holoSpin{to{--ha:360deg}}
+@property --ha{syntax:'<angle>';initial-value:0deg;inherits:false}
+/* tarjetas de la rueda: foil + brillo + EN VIVO */
+.cfoil{position:absolute;inset:0;border-radius:18px;pointer-events:none;z-index:2;overflow:hidden}
+.cfoil::before{content:"";position:absolute;top:-30%;bottom:-30%;width:46%;left:0;background:linear-gradient(105deg,transparent,rgba(255,255,255,.34),transparent);animation:shineSweep 4.6s ease-in-out infinite;animation-delay:var(--sd,0s)}
+.cfoil::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 90% at 85% 8%,rgba(255,255,255,.18),transparent 45%)}
+.clive{position:absolute;top:9px;right:9px;z-index:3;font-family:var(--mono);font-size:7.5px;letter-spacing:1.2px;color:#7CFFB2;background:rgba(6,20,12,.55);border:1px solid rgba(124,255,178,.45);padding:3px 6px;border-radius:20px;backdrop-filter:blur(3px)}
+.clive i{display:inline-block;width:5px;height:5px;border-radius:50%;background:#4ADE80;margin-right:4px;box-shadow:0 0 6px #4ADE80;animation:npulse 1.8s infinite}
+/* cinta de stats bajo el hero */
+.ribbon{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:0 0 34px}
+.ribbon .rb{display:flex;align-items:baseline;gap:10px;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:14px;padding:13px 16px;position:relative;overflow:hidden}
+.ribbon .rb::after{content:"";position:absolute;top:-40%;bottom:-40%;width:40%;left:-10%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.07),transparent);animation:shineSweep 6s ease-in-out infinite}
+.ribbon .rb b{font-size:clamp(19px,2.4vw,26px);font-weight:600;letter-spacing:-.02em;background:linear-gradient(135deg,#8B5CF6,#2BD2FF);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ribbon .rb span{font-size:11px;color:var(--mut);line-height:1.3}
+/* ===== ÁLBUM: sobres por categoría ===== */
+.cdiv{grid-column:1/-1;position:relative;overflow:hidden;border-radius:14px;margin-top:20px;padding:15px 18px 13px;display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid rgba(255,255,255,.14);background:linear-gradient(115deg,#17181f 0%,#232532 30%,#181a24 52%,#262a3a 74%,#15161d 100%)}
+.cdiv::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(255,255,255,.05) 0 2px,transparent 2px 7px);opacity:.5}
+.cdiv::after{content:"";position:absolute;top:-40%;bottom:-40%;width:34%;left:0;background:linear-gradient(105deg,transparent,rgba(255,255,255,.22),transparent);animation:shineSweep 5.2s ease-in-out infinite}
+.cdiv .sn{font-family:var(--mono);font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#fff;position:relative;text-shadow:0 1px 8px rgba(0,0,0,.5)}
+.cdiv .sc{font-family:var(--mono);font-size:8.5px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.55);position:relative;white-space:nowrap}
+/* ===== ÁLBUM: láminas coleccionables ===== */
+.ct{position:relative;background:linear-gradient(165deg,rgba(255,255,255,.085),rgba(255,255,255,.028));border:1px solid transparent;border-radius:14px;padding:5px;cursor:pointer;text-align:left;transform-style:preserve-3d;will-change:transform;transition:transform .3s ease,box-shadow .3s,opacity .55s,translate .55s;opacity:0;translate:0 28px;transform:perspective(800px) rotateX(18deg);transform-origin:50% 0;background-clip:padding-box}
+.ct::before{content:"";position:absolute;inset:-1px;border-radius:14px;padding:1px;background:conic-gradient(from var(--ha,0deg),#8B5CF6,#2BD2FF,#2FBF71,#FFB454,#FF4D8D,#8B5CF6);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.5;animation:holoSpin 7s linear infinite;pointer-events:none}
+.ct:hover::before{opacity:1}
 .ct.in{opacity:1;translate:0 0;transform:none}
-.ct:hover{box-shadow:0 24px 54px rgba(0,0,0,.14)}
+.ct:hover{box-shadow:0 24px 54px rgba(0,0,0,.3)}
 .ct.hide{display:none}
-.ct .band{height:38px;border-radius:12px;position:relative;overflow:hidden;display:flex;align-items:flex-end;justify-content:space-between;padding:10px 12px}
-.ct .band::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,255,255,.25),transparent 55%)}
-.ct .band .ix{font-family:var(--mono);font-size:12.5px;color:#fff;font-weight:500;position:relative}
-.ct .band .ar{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.9);position:relative}
-.ct h4{font-weight:500;font-size:12.5px;letter-spacing:-.01em;margin:7px 0 2px}
-.ct p{color:var(--mut);font-size:10px;line-height:1.4}
-.ct .go{font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--dim);margin-top:10px;text-transform:uppercase}
-.ct:hover .go{color:var(--ink)}
+.ct .lam{position:relative;border-radius:10px;overflow:hidden;background:rgba(10,10,15,.4);padding:0 0 9px}
+.ct .lfoil{position:absolute;inset:0;pointer-events:none;z-index:2;overflow:hidden;border-radius:10px}
+.ct .lfoil::before{content:"";position:absolute;top:-30%;bottom:-30%;width:44%;left:0;background:linear-gradient(105deg,transparent,rgba(255,255,255,.16),transparent);transform:translateX(-130%) skewX(-18deg);transition:none}
+.ct:hover .lfoil::before{animation:shineSweep .9s ease-in-out}
+.ct .band{height:44px;border-radius:10px 10px 0 0;position:relative;overflow:hidden;display:flex;align-items:flex-end;justify-content:space-between;padding:9px 11px}
+.ct .band::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,255,255,.3),transparent 55%),repeating-linear-gradient(135deg,rgba(255,255,255,.07) 0 1.5px,transparent 1.5px 6px)}
+.ct .band .ix{font-family:var(--mono);font-size:11px;color:#fff;font-weight:600;position:relative;z-index:1;text-shadow:0 1px 6px rgba(0,0,0,.4)}
+.ct .band .ar{font-family:var(--mono);font-size:7.5px;letter-spacing:1.2px;text-transform:uppercase;color:#7CFFB2;position:relative;z-index:1;background:rgba(6,20,12,.5);border:1px solid rgba(124,255,178,.4);padding:2px 6px;border-radius:20px}
+.ct h4{font-weight:500;font-size:12.5px;letter-spacing:-.01em;margin:9px 10px 3px;color:#fff}
+.ct p{color:var(--mut);font-size:10px;line-height:1.42;margin:0 10px}
+.ct .lft{display:flex;align-items:center;justify-content:space-between;margin:10px 10px 0}
+.ct .cx{font-family:var(--mono);font-size:7.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim)}
+.ct .go{font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--dim);text-transform:uppercase;transition:color .25s}
+.ct:hover .go{color:#7CFFB2}
+/* ===== CHATS EN VIVO ===== */
+.livechat{padding:clamp(60px,9vh,100px) 0}
+.livechat .botlead b{color:var(--ink)}
+.lc-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:26px}
+.lc{position:relative;border-radius:18px;padding:1px;background:linear-gradient(160deg,var(--lc1),transparent 55%);overflow:hidden}
+.lc .lci{background:rgba(14,14,19,.92);border-radius:17px;padding:15px 15px 13px;min-height:212px;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.lc .lci::after{content:"";position:absolute;inset:0;background:radial-gradient(90% 60% at 85% 0%,var(--lc2),transparent 60%);opacity:.14;pointer-events:none}
+.lc-h{display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.lc-h .av{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:var(--lc1);color:#fff;flex:none}
+.lc-h .av svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:1.8}
+.lc-h .rn{font-weight:500;font-size:13.5px;color:#fff}
+.lc-h .lv{font-family:var(--mono);font-size:7.5px;letter-spacing:1.2px;color:#7CFFB2;text-transform:uppercase}
+.lc-h .lv i{display:inline-block;width:5px;height:5px;border-radius:50%;background:#4ADE80;margin-right:4px;box-shadow:0 0 6px #4ADE80;animation:npulse 1.8s infinite}
+.lc-h .eq{margin-left:auto;display:flex;gap:2.5px;align-items:flex-end;height:14px}
+.lc-h .eq i{width:2.5px;background:var(--lc2);border-radius:2px;animation:eqb 1s ease-in-out infinite}
+.lc-h .eq i:nth-child(1){height:60%}.lc-h .eq i:nth-child(2){height:100%;animation-delay:.15s}.lc-h .eq i:nth-child(3){height:45%;animation-delay:.3s}.lc-h .eq i:nth-child(4){height:80%;animation-delay:.45s}
+@keyframes eqb{0%,100%{transform:scaleY(.5)}50%{transform:scaleY(1)}}
+.lc-msgs{flex:1;display:flex;flex-direction:column;gap:8px;position:relative;z-index:1}
+.lc-b{max-width:88%;padding:8px 11px;border-radius:13px;font-size:11.5px;line-height:1.42;opacity:0;translate:0 8px;transition:opacity .4s,translate .4s;color:#E8E8EE}
+.lc-b.on{opacity:1;translate:0 0}
+.lc-b.c{align-self:flex-start;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.1);border-bottom-left-radius:4px}
+.lc-b.b{align-self:flex-end;background:linear-gradient(150deg,var(--lc1),var(--lc3));border-bottom-right-radius:4px}
+.lc-b .tm{display:block;font-family:var(--mono);font-size:7.5px;opacity:.55;margin-top:4px}
+.lc-b.td{display:flex;gap:4px;padding:10px 13px}
+.lc-b.td i{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.65);animation:ndot 1s infinite}
+.lc-b.td i:nth-child(2){animation-delay:.15s}.lc-b.td i:nth-child(3){animation-delay:.3s}
+@keyframes ndot{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
+.lc-f{margin-top:12px;position:relative;z-index:1}
+.lc-f a{font-family:var(--mono);font-size:9px;letter-spacing:1.2px;text-transform:uppercase;color:var(--mut);text-decoration:none;transition:color .25s}
+.lc-f a:hover{color:#7CFFB2}
+/* hero venta + espacios v3.1 */
+.hsub{max-width:620px;margin:14px auto 0;text-align:center;color:var(--mut);font-size:clamp(13px,1.4vw,15.5px);line-height:1.55;position:relative;z-index:5}
+.hsub b{color:var(--ink)}
+.hcta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:18px auto 6px;position:relative;z-index:5}
+.ghostpill{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;padding:13px 22px;font-size:13.5px;color:var(--mut);text-decoration:none;background:rgba(255,255,255,.03);cursor:pointer;transition:.25s}
+.ghostpill:hover{color:var(--ink);border-color:rgba(255,255,255,.4);transform:translateY(-1px)}
+.lc-cta{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:26px}
+.livechat{padding:clamp(64px,10vh,110px) 0}
+.ck{letter-spacing:1.1px!important;white-space:nowrap}
 /* ===== NODO ===== */
 #nodoBtn{position:fixed;right:18px;bottom:18px;z-index:145;width:58px;height:58px;border-radius:50%;background:var(--btn);color:var(--btnink);border:none;cursor:pointer;box-shadow:0 14px 36px rgba(0,0,0,.3);display:grid;place-items:center;transition:.25s}
 #nodoBtn:hover{transform:scale(1.07)}
@@ -496,7 +586,7 @@ section>.wrap{position:relative;z-index:1}
   .hline span{transform:none}.rv{opacity:1;transform:none}
 }
 </style>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"CO-DATA","description":"Digitalización y automatización para empresas y pymes en Chile.","email":"contacto@co-data.cl","telephone":"+56941316203","areaServed":"CL"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"CO-DATA","description":"Digitalización y automatización para empresas y pymes en Chile.","email":"contacto@co-data.cl","telephone":"+56957898782","areaServed":"CL","sameAs":["https://www.linkedin.com/company/co-data-chile/","https://www.instagram.com/codata.cl/","https://www.tiktok.com/@codata.cl"]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"¿Qué hace CO-DATA?","acceptedAnswer":{"@type":"Answer","text":"Digitaliza lo que vive en papel, automatiza lo repetitivo y deja cada peso y cada hora medidos, para empresas y pymes en Chile."}},{"@type":"Question","name":"¿La Ley 21.719 aplica a mi empresa?","acceptedAnswer":{"@type":"Answer","text":"Si guarda datos de clientes, trabajadores o proveedores, aplica. Rige desde diciembre de 2026 con multas de hasta 20.000 UTM."}},{"@type":"Question","name":"¿Cómo trabaja CO-DATA?","acceptedAnswer":{"@type":"Answer","text":"Primero escucha la operación, después muestra la solución funcionando con la marca del cliente antes de cualquier compromiso, y luego implementa de cero a cien con capacitación y soporte continuo."}}]}</script>
 </head>
 <body>
@@ -533,7 +623,7 @@ section>.wrap{position:relative;z-index:1}
       <a href="#" id="navCat">Galería</a>
       <a href="#" id="navVis">Visión</a>
       <a href="#" id="navLey">Ley 21.719</a>
-      <a class="pill hoverable" href="https://wa.me/56941316203?text=Hola%20CO-DATA%2C%20quiero%20hablar%20de%20mi%20negocio." target="_blank" rel="noopener">Hablemos</a>
+      <a class="pill hoverable" href="https://wa.me/56957898782?text=Hola%20CO-DATA%2C%20quiero%20hablar%20de%20mi%20negocio." target="_blank" rel="noopener">Hablemos</a>
     </div>
   </div>
 </nav>
@@ -546,6 +636,8 @@ section>.wrap{position:relative;z-index:1}
       <span class="hline h1"><span>Transformamos su negocio</span></span>
       <span class="hline h2"><span>en una <em class="xp" style="font-style:normal">experiencia.</em></span></span>
     </h1>
+    <p class="hsub rv">Digitalizamos y automatizamos empresas y pymes en Chile — agenda, ventas, cobranza, terreno y cumplimiento. <b>Cada solución la ve funcionando con su marca antes de decidir.</b></p>
+    <div class="hcta rv"><button class="bigpill hoverable mag" type="button" onclick="openCat()">Abrir el álbum — 83 modelos →</button><a class="ghostpill hoverable" href="#vivo">Ver la IA trabajando</a></div>
     <div class="stage" id="stage">
       <div class="fan" id="fan"></div>
     </div>
@@ -571,31 +663,52 @@ section>.wrap{position:relative;z-index:1}
 <section id="valor">
   <div class="f3d ftow" aria-hidden="true"><span class="tw t1"></span><span class="tw t2"></span><span class="tw t3"></span><span class="tw t4"></span><span class="tw t5"></span></div>
   <div class="wrap">
+    <div class="ribbon rv">
+      <div class="rb"><b>83+</b><span>modelos listos para operar con su marca</span></div>
+      <div class="rb"><b>35</b><span>demos en vivo — pruébelas ahora mismo</span></div>
+      <div class="rb"><b>19</b><span>líneas de solución para toda su operación</span></div>
+      <div class="rb"><b>24/7</b><span>atención con IA, también cuando descansa</span></div>
+    </div>
     <h2 class="k">Lo que cambia</h2>
     <div class="stats">
+      <div class="st rv"><div class="n"><span class="cnt" data-to="60">0</span><em>seg</em></div><p>y su cotización profesional está lista y enviada — lo que antes tomaba días.</p></div>
+      <div class="st rv"><div class="n">−<span class="cnt" data-to="15">0</span><em>h</em></div><p>a la semana en tareas repetitivas que el sistema pasa a hacer solo.</p></div>
       <div class="st rv"><div class="n">−<span class="cnt" data-to="80">0</span><em>%</em></div><p>de ausentismo cuando la hora se agenda con recordatorio y abono.</p></div>
       <div class="st rv"><div class="n">~<span class="cnt" data-to="30">0</span><em>%</em></div><p>de cada venta que hoy se llevan las apps, vuelve a su caja con canal propio.</p></div>
-      <div class="st rv"><div class="n"><span class="cnt" data-to="100">0</span><em>%</em></div><p>trazable: cada peso y cada hora de su operación quedan registrados, medibles y reportables.</p></div>
+      <div class="st rv"><div class="n"><span class="cnt" data-to="10">0</span><em>seg</em></div><p>tarda validar credenciales en terreno con un QR — sin carpetas ni esperas.</p></div>
       <div class="st rv"><div class="n"><span class="cnt" data-to="24">0</span><em>/7</em></div><p>su negocio atiende, agenda y responde también cuando usted descansa.</p></div>
     </div>
   </div>
 </section>
 
-<!-- ===== asistentes vivos ===== -->
-<section class="botsec" id="bots">
-  <div class="f3d fnuc" aria-hidden="true"><span class="nhalo"></span><span class="ncore"></span><span class="rg rg1"><i></i></span><span class="rg rg2"><i></i></span><span class="rg rg3"><i></i></span></div>
+<!-- ===== IA en vivo: mírelos trabajar ===== -->
+<section class="livechat" id="vivo">
   <div class="wrap">
-    <h2 class="k">Asistentes que no duermen</h2>
-    <p class="botlead rv">Conversaciones reales atendidas por robots entrenados para su negocio. <b>Mírelos trabajar:</b></p>
-    <div class="bots">
-      <div class="bot rv" data-b="0"><div class="bh"><span>🛒</span>Vendedor</div><div class="bx"></div></div>
-      <div class="bot rv" data-b="1"><div class="bh"><span>📅</span>Recepcionista</div><div class="bx"></div></div>
-      <div class="bot rv" data-b="2"><div class="bh"><span>💳</span>Cobrador</div><div class="bx"></div></div>
-      <div class="bot rv" data-b="3"><div class="bh"><span>🛠️</span>Soporte</div><div class="bx"></div></div>
+    <h2 class="k">IA al servicio de su empresa</h2>
+    <p class="botlead rv">Estos cuatro asistentes están atendiendo <b>ahora mismo</b>. Así se ve un negocio que vende, agenda, cobra y responde solo — <b>también de madrugada</b>:</p>
+    <div class="lc-g rv">
+      <div class="lc" style="--lc1:#8B5CF6;--lc2:#B197FF;--lc3:#4F7DFF"><div class="lci">
+        <div class="lc-h"><span class="av"><svg viewBox="0 0 24 24"><rect x="5" y="8" width="14" height="11" rx="3.5"/><path d="M12 4v4M8 4h8"/><circle cx="9.4" cy="13" r="1.3" fill="#fff" stroke="none"/><circle cx="14.6" cy="13" r="1.3" fill="#fff" stroke="none"/></svg></span><div><div class="rn">Vendedor</div><div class="lv"><i></i>En vivo</div></div><span class="eq"><i></i><i></i><i></i><i></i></span></div>
+        <div class="lc-msgs" data-chat='[["c","Hola, ¿tienen el modelo 4 disponible?"],["b","¡Sí! Te envío detalles y disponibilidad al tiro. ¿Te lo reservo? 🛒"]]'></div>
+        <div class="lc-f"><a href="demos/codata-agente-ia-demo.html" target="_blank" rel="noopener">Ver esta demo →</a></div>
+      </div></div>
+      <div class="lc" style="--lc1:#FF7A59;--lc2:#FFB454;--lc3:#FF4D8D"><div class="lci">
+        <div class="lc-h"><span class="av"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span><div><div class="rn">Recepcionista</div><div class="lv"><i></i>En vivo</div></div><span class="eq"><i></i><i></i><i></i><i></i></span></div>
+        <div class="lc-msgs" data-chat='[["c","¿Tienen hora para mañana?"],["b","¡Claro! ¿10:30 o 16:00? Te la dejo confirmada con recordatorio. 📅"]]'></div>
+        <div class="lc-f"><a href="demos/codata-reservas-demo.html" target="_blank" rel="noopener">Ver esta demo →</a></div>
+      </div></div>
+      <div class="lc" style="--lc1:#2FBF71;--lc2:#B7E94C;--lc3:#0D9488"><div class="lci">
+        <div class="lc-h"><span class="av"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v9M9.5 9.8c0-1.2 1.1-2 2.5-2s2.5.7 2.5 1.9c0 2.6-5 1.5-5 4.1 0 1.2 1.1 2 2.5 2s2.5-.8 2.5-2"/></svg></span><div><div class="rn">Cobrador</div><div class="lv"><i></i>En vivo</div></div><span class="eq"><i></i><i></i><i></i><i></i></span></div>
+        <div class="lc-msgs" data-chat='[["c","Hola, se me pasó el pago 😅 ¿me ayudan?"],["b","Sin problema — te envío el link de pago seguro y queda al día. 💳"]]'></div>
+        <div class="lc-f"><a href="demos/codata-cobranza-automatizada-demo.html" target="_blank" rel="noopener">Ver esta demo →</a></div>
+      </div></div>
+      <div class="lc" style="--lc1:#2F80ED;--lc2:#2BD2FF;--lc3:#4F7DFF"><div class="lci">
+        <div class="lc-h"><span class="av"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 16 0"/><rect x="3" y="12" width="4" height="7" rx="2"/><rect x="17" y="12" width="4" height="7" rx="2"/><path d="M20 17v1a3 3 0 0 1-3 3h-3"/></svg></span><div><div class="rn">Soporte</div><div class="lv"><i></i>En vivo</div></div><span class="eq"><i></i><i></i><i></i><i></i></span></div>
+        <div class="lc-msgs" data-chat='[["c","No me carga el sistema desde ayer 😕"],["b","Vamos a revisarlo juntos. ¿En qué navegador te ocurre? 🔧"]]'></div>
+        <div class="lc-f"><a href="demos/codata-portal-cliente-demo.html" target="_blank" rel="noopener">Ver esta demo →</a></div>
+      </div></div>
     </div>
-    <div style="margin-top:22px">
-      <button class="bigpill hoverable mag" type="button" onclick="nOpen()">Pruébelo ahora — hable con NODO →</button>
-    </div>
+    <div class="lc-cta rv"><button class="bigpill hoverable mag" type="button" onclick="nOpen()">Pruébelo ahora — hable con NODO →</button><a class="ghostpill hoverable" href="https://wa.me/56957898782?text=Hola%20CO-DATA%2C%20quiero%20un%20asistente%20as%C3%AD%20para%20mi%20negocio." target="_blank" rel="noopener">Quiero uno para mi negocio</a></div>
   </div>
 </section>
 
@@ -618,7 +731,7 @@ section>.wrap{position:relative;z-index:1}
       <div class="ms"><div class="num">03</div><h3>De cero a cien</h3><p>Implementación, capacitación y soporte continuo. Nos hacemos responsables de que funcione — nada queda a medias.</p></div>
     </div>
     <div class="cta-row" style="display:flex;justify-content:flex-start">
-      <a class="bigpill hoverable mag" href="https://wa.me/56941316203?text=Hola%20CO-DATA%2C%20quiero%20ver%20c%C3%B3mo%20se%20ver%C3%ADa%20mi%20operaci%C3%B3n%20funcionando." target="_blank" rel="noopener">Conversemos su operación →</a>
+      <a class="bigpill hoverable mag" href="https://wa.me/56957898782?text=Hola%20CO-DATA%2C%20quiero%20ver%20c%C3%B3mo%20se%20ver%C3%ADa%20mi%20operaci%C3%B3n%20funcionando." target="_blank" rel="noopener">Conversemos su operación →</a>
     </div>
   </div>
 </section>
@@ -638,14 +751,14 @@ section>.wrap{position:relative;z-index:1}
       <div class="wc rv"><h3>🇨🇱 Hecho para Chile</h3><p>WhatsApp, terreno, boleta y la realidad local en el centro del diseño.</p></div>
     </div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:22px">
-      <a class="bigpill hoverable mag" href="https://wa.me/56941316203?text=Hola%20CO-DATA%2C%20quiero%20mi%20soluci%C3%B3n%20funcionando." target="_blank" rel="noopener">Quiero mi solución →</a>
+      <a class="bigpill hoverable mag" href="https://wa.me/56957898782?text=Hola%20CO-DATA%2C%20quiero%20mi%20soluci%C3%B3n%20funcionando." target="_blank" rel="noopener">Quiero mi solución →</a>
       <button class="bigpill ghostp hoverable" type="button" onclick="openCat()">Ver la galería</button>
     </div>
   </div>
 </section>
 
 <!-- ===== caso real ===== -->
-<section class="casosec" id="caso">
+<section class="casosec" id="caso" hidden style="display:none"><!-- SECCION OCULTA TEMPORALMENTE: se habilitara con links reales de cada empresa -->
   <div class="wrap">
     <h2 class="k">Resultados reales</h2>
     <p class="botlead rv">No hablamos de clientes imaginarios. <b>Operamos lo nuestro con esta misma tecnología.</b></p>
@@ -690,14 +803,17 @@ section>.wrap{position:relative;z-index:1}
 <footer>
   <div class="wrap">
     <h2 class="k">Hablemos</h2>
-    <div class="fbig rv"><a class="hoverable mag" href="https://wa.me/56941316203?text=Hola%20CO-DATA." target="_blank" rel="noopener">WhatsApp directo →</a></div>
+    <div class="fbig rv"><a class="hoverable mag" href="https://wa.me/56957898782?text=Hola%20CO-DATA." target="_blank" rel="noopener">WhatsApp directo →</a></div>
     <a class="fmail hoverable rv" href="mailto:contacto@co-data.cl">contacto@co-data.cl</a>
     <div class="fline">
       <span>© 2026 CO-DATA · Santiago, Chile</span>
       <a href="#" id="footCat">Galería de modelos</a>
       <a href="#" id="footLey">Ley 21.719</a>
       <a href="#" id="footVis">Quiénes somos</a>
-      <a href="https://wa.me/56941316203" target="_blank" rel="noopener">+56 9 4131 6203</a>
+      <a href="https://wa.me/56957898782" target="_blank" rel="noopener">+56 9 5789 8782</a>
+      <a href="https://www.linkedin.com/company/co-data-chile/" target="_blank" rel="noopener">LinkedIn ↗</a>
+      <a href="https://www.instagram.com/codata.cl/" target="_blank" rel="noopener">Instagram ↗</a>
+      <a href="https://www.tiktok.com/@codata.cl" target="_blank" rel="noopener">TikTok ↗</a>
     </div>
   </div>
 </footer>
@@ -705,7 +821,7 @@ section>.wrap{position:relative;z-index:1}
 <!-- catálogo integrado -->
 <div id="cat" role="dialog" aria-modal="true" aria-label="Catálogo de servicios" aria-hidden="true">
   <div class="cat-head">
-    <div class="in"><h2>La galería — <b>83 modelos</b>, ordenados por categoría</h2><button id="catX" aria-label="Cerrar">✕</button></div>
+    <div class="in"><h2>El Álbum CO-DATA — <b>83 láminas</b> · Colección 2026</h2><button id="catX" aria-label="Cerrar">✕</button></div>
     <div class="chips" id="chips"></div>
   </div>
   <div class="cat-grid" id="catGrid"></div>
@@ -758,7 +874,7 @@ section>.wrap{position:relative;z-index:1}
       <div class="lb-c"><h4>02 · Puesta en regla</h4><p>Políticas, consentimientos, registros y seguridad — implementados y operando en su realidad.</p></div>
       <div class="lb-c"><h4>03 · Evidencia continua</h4><p>El cumplimiento se mantiene vivo: trazable, reportable y listo para demostrar.</p></div>
     </div>
-    <div class="lb-cta"><a class="lb-btn" href="https://wa.me/56941316203?text=Hola%20CO-DATA%2C%20quiero%20poner%20mi%20empresa%20en%20regla%20con%20la%20Ley%2021.719." target="_blank" rel="noopener">Quiero cumplir la ley →</a><a class="ovlink" href="ley-21719.html" target="_blank" rel="noopener">Ver página completa ↗</a></div></div>
+    <div class="lb-cta"><a class="lb-btn" href="https://wa.me/56957898782?text=Hola%20CO-DATA%2C%20quiero%20poner%20mi%20empresa%20en%20regla%20con%20la%20Ley%2021.719." target="_blank" rel="noopener">Quiero cumplir la ley →</a><a class="ovlink" href="ley-21719.html" target="_blank" rel="noopener">Ver página completa ↗</a></div></div>
   </div>
 </div>
 
@@ -785,6 +901,7 @@ section>.wrap{position:relative;z-index:1}
       <div id="mname"></div>
       <p id="mdesc"></p>
       <div class="mchips" id="mchips"></div>
+      <div id="mrel"></div>
       <div class="macts">
         <a class="mb hoverable" id="mdemo" target="_blank" rel="noopener">Abrir demo completa</a>
         <a class="mb dark hoverable" id="mwa" target="_blank" rel="noopener">Cotizar</a>
@@ -796,66 +913,82 @@ section>.wrap{position:relative;z-index:1}
 <script>
 /* ================= DATA: las 6 piezas del abanico ================= */
 var P=[
- {k:"Clientes",n:"Agenda que se llena sola",g:"g1",grad:"linear-gradient(160deg,#8B5CF6,#4F7DFF)",
+ {k:"Agenda",n:"Agenda que se llena sola",g:"g1",grad:"linear-gradient(160deg,#8B5CF6,#4F7DFF)",
   d:"Sus clientes reservan solos las 24 horas, con recordatorio automático y abono. Se acabaron las horas vacías por gente que no llega.",
-  o:"Cero horas vacías",demo:"demos/codata-reservas-demo.html"},
- {k:"Ventas",n:"Cotizador que cotiza solo",g:"g2",grad:"linear-gradient(160deg,#2F80ED,#2BD2FF)",
+  o:"Cero horas vacías",demo:"demos/codata-reservas-demo.html",
+  rel:[{t:"Tótem de autoatención",f:"demos/codata-totem-autoatencion-demo.html",ic:"qr"},{t:"Fidelización y recompra",f:"demos/codata-fidelizacion-app-demo.html",ic:"star"},{t:"Reseñas 5★",f:"demos/codata-resenas-5estrellas-demo.html",ic:"chat"}]},
+ {k:"Cotización",n:"Cotizador que cotiza solo",g:"g2",grad:"linear-gradient(160deg,#2F80ED,#2BD2FF)",
   d:"Cotización profesional en un minuto, con su marca. Y seguimiento automático al que no responde — la venta ya no se escapa en silencio.",
-  o:"Ninguna venta se escapa",demo:"demos/codata-cotizador-demo.html"},
- {k:"Operación",n:"Cobranza que se cobra sola",g:"g3",grad:"linear-gradient(160deg,#B7E94C,#2FBF71)",
+  o:"Ninguna venta se escapa",demo:"demos/codata-cotizador-demo.html",
+  rel:[{t:"CRM y pipeline",f:"demos/codata-crm-pipeline-demo.html",ic:"chart"},{t:"Generador de documentos",f:"demos/codata-generador-documentos-demo.html",ic:"doc"},{t:"Vendedor 24/7 con IA",f:"demos/codata-agente-ia-demo.html",ic:"chat"}]},
+ {k:"Cobranza",n:"Cobranza que se cobra sola",g:"g3",grad:"linear-gradient(160deg,#B7E94C,#2FBF71)",
   d:"Recordatorios de pago constantes y amables, con link para pagar al tiro. Usted no persigue a nadie: el sistema lo hace.",
-  o:"Su caja al día",demo:"demos/codata-cobranza-automatizada-demo.html"},
- {k:"Ventas",n:"Vendedor 24/7 con IA",g:"g4",grad:"linear-gradient(160deg,#FF7A59,#FF4D8D)",
+  o:"Su caja al día",demo:"demos/codata-cobranza-automatizada-demo.html",
+  rel:[{t:"Gastos y rendiciones",f:"demos/codata-gastos-rendiciones-demo.html",ic:"doc"},{t:"Centro de mando",f:"demos/codata-centro-mando-demo.html",ic:"chart"}]},
+ {k:"Atención IA",n:"Vendedor 24/7 con IA",g:"g4",grad:"linear-gradient(160deg,#FF7A59,#FF4D8D)",
   d:"Un asistente que responde su WhatsApp, cotiza y agenda mientras usted duerme. Ningún cliente se queda sin respuesta.",
-  o:"Atención 24/7",demo:"demos/codata-agente-ia-demo.html"},
+  o:"Atención 24/7",demo:"demos/codata-agente-ia-demo.html",
+  rel:[{t:"Encuesta rápida",f:"demos/codata-encuesta-rapida-demo.html",ic:"gauge"},{t:"Agenda automática",f:"demos/codata-reservas-demo.html",ic:"cal"},{t:"Carta QR y pedidos",f:"demos/codata-carta-comanda-demo.html",ic:"qr"}]},
  {k:"Cumplimiento",n:"Ley de Datos 21.719",g:"g5",grad:"linear-gradient(160deg,#FFB454,#FF7A45)",
   d:"Le decimos si su empresa está expuesta y la dejamos cumpliendo antes de que rijan las multas de diciembre 2026.",
-  o:"Cumplimiento en regla",demo:"ley-21719.html"},
- {k:"Terreno",n:"Pasaporte del trabajador",g:"g6",grad:"linear-gradient(160deg,#7C8DA6,#3B4A63)",
+  o:"Cumplimiento en regla",demo:"ley-21719.html",
+  rel:[{t:"Documentación legal",f:"demos/codata-documentacion-legal-demo.html",ic:"doc"},{t:"Alerta de vencimientos",f:"demos/codata-trazabilidad-vencimientos-demo.html",ic:"cal"},{t:"Diagnóstico digital",f:"demos/codata-diagnostico-digital-demo.html",ic:"gauge"}]},
+ {k:"Acreditación",n:"Pasaporte del trabajador",g:"g6",grad:"linear-gradient(160deg,#7C8DA6,#3B4A63)",
   d:"Documentos y vigencias de cada trabajador en un QR que se valida en segundos en el acceso. Cero carpetas, cero cuadrillas detenidas.",
-  o:"Terreno sin detenciones",demo:"demos/codata-pasaporte-trabajador-demo.html"},
- {k:"Ventas",n:"Carta QR y pedidos directos",g:"g2",grad:"linear-gradient(160deg,#2F80ED,#2BD2FF)",
+  o:"Terreno sin detenciones",demo:"demos/codata-pasaporte-trabajador-demo.html",
+  rel:[{t:"Acreditación en portales",f:"demos/codata-acreditacion-portales-demo.html",ic:"doc"},{t:"Asistencia y turnos",f:"demos/codata-asistencia-turnos-demo.html",ic:"cal"},{t:"Inspecciones de terreno",f:"demos/codata-inspeccion-terreno-demo.html",ic:"qr"}]},
+ {k:"Pedidos",n:"Carta QR y pedidos directos",g:"g2",grad:"linear-gradient(160deg,#2F80ED,#2BD2FF)",
   d:"Sus clientes piden desde la mesa o desde la casa, directo a su WhatsApp y sin apps de por medio. El cliente queda en SU base.",
-  o:"Pedidos sin comisión",demo:"demos/codata-carta-comanda-demo.html"},
- {k:"Clientes",n:"Reseñas 5★ en automático",g:"g1",grad:"linear-gradient(160deg,#8B5CF6,#4F7DFF)",
+  o:"Pedidos sin comisión",demo:"demos/codata-carta-comanda-demo.html",
+  rel:[{t:"Tienda online",f:"demos/codata-tienda-demo.html",ic:"chart"},{t:"Tótem de autoatención",f:"demos/codata-totem-autoatencion-demo.html",ic:"qr"},{t:"Control de inventario",f:"demos/codata-control-inventario-demo.html",ic:"doc"}]},
+ {k:"Reputación",n:"Reseñas 5★ en automático",g:"g1",grad:"linear-gradient(160deg,#8B5CF6,#4F7DFF)",
   d:"Tras cada servicio, su cliente recibe la invitación a dejar reseña en Google con un toque. Si viene una mala, usted se entera primero.",
-  o:"Reputación que vende",demo:"demos/codata-resenas-5estrellas-demo.html"},
- {k:"Ventas",n:"Recuperación de clientes dormidos",g:"g2",grad:"linear-gradient(160deg,#2F80ED,#2BD2FF)",
+  o:"Reputación que vende",demo:"demos/codata-resenas-5estrellas-demo.html",
+  rel:[{t:"Encuesta rápida",f:"demos/codata-encuesta-rapida-demo.html",ic:"gauge"},{t:"Perfil profesional",f:"demos/codata-perfil-hub-demo.html",ic:"doc"},{t:"Fidelización",f:"demos/codata-fidelizacion-app-demo.html",ic:"star"}]},
+ {k:"Recuperación",n:"Recuperación de clientes dormidos",g:"g2",grad:"linear-gradient(160deg,#2F80ED,#2BD2FF)",
   d:"Su libreta está llena de clientes que compraron una vez y no volvieron. Los contactamos con el mensaje justo y vuelven solos.",
-  o:"Clientes que regresan",demo:"demos/codata-recuperacion-clientes-demo.html"},
- {k:"Operación",n:"Stock que avisa antes de faltar",g:"g3",grad:"linear-gradient(160deg,#B7E94C,#2FBF71)",
+  o:"Clientes que regresan",demo:"demos/codata-recuperacion-clientes-demo.html",
+  rel:[{t:"CRM y pipeline",f:"demos/codata-crm-pipeline-demo.html",ic:"chart"},{t:"Fidelización y recompra",f:"demos/codata-fidelizacion-app-demo.html",ic:"star"},{t:"Centro de mando",f:"demos/codata-centro-mando-demo.html",ic:"gauge"}]},
+ {k:"Inventario",n:"Stock que avisa antes de faltar",g:"g3",grad:"linear-gradient(160deg,#B7E94C,#2FBF71)",
   d:"Su inventario al día desde el celular. Al llegar al mínimo avisa y deja el pedido al proveedor listo para enviar.",
-  o:"Nunca sin stock",demo:"demos/codata-control-inventario-demo.html"},
- {k:"Clientes",n:"Fidelización y recompra",g:"g1",grad:"linear-gradient(160deg,#8B5CF6,#4F7DFF)",
+  o:"Nunca sin stock",demo:"demos/codata-control-inventario-demo.html",
+  rel:[{t:"Compras y proveedores",f:"demos/codata-compras-proveedores-demo.html",ic:"doc"},{t:"Calidad y mermas",f:"demos/codata-calidad-mermas-demo.html",ic:"gauge"},{t:"Control de flota",f:"demos/codata-control-flota-demo.html",ic:"chart"}]},
+ {k:"Fidelización",n:"Fidelización y recompra",g:"g1",grad:"linear-gradient(160deg,#8B5CF6,#4F7DFF)",
   d:"Tarjeta de puntos digital y recordatorio automático para re-agendar la próxima visita. La recompra deja de depender de la suerte.",
-  o:"Recompra automática",demo:"demos/codata-fidelizacion-app-demo.html"},
- {k:"Cumplimiento",n:"Alerta de vencimientos",g:"g5",grad:"linear-gradient(160deg,#FFB454,#FF7A45)",
+  o:"Recompra automática",demo:"demos/codata-fidelizacion-app-demo.html",
+  rel:[{t:"Agenda automática",f:"demos/codata-reservas-demo.html",ic:"cal"},{t:"Recuperación de dormidos",f:"demos/codata-recuperacion-clientes-demo.html",ic:"chat"},{t:"Encuesta rápida",f:"demos/codata-encuesta-rapida-demo.html",ic:"gauge"}]},
+ {k:"Vencimientos",n:"Alerta de vencimientos",g:"g5",grad:"linear-gradient(160deg,#FFB454,#FF7A45)",
   d:"Patentes, seguros, contratos y revisiones con alerta automática antes de vencer — para su negocio o para su gente.",
-  o:"Nada se vence",demo:"demos/codata-trazabilidad-vencimientos-demo.html"},
- {k:"Ventas",n:"Tienda y catálogo online",g:"g2",grad:"linear-gradient(160deg,#2F80ED,#2BD2FF)",
+  o:"Nada se vence",demo:"demos/codata-trazabilidad-vencimientos-demo.html",
+  rel:[{t:"Control de flota",f:"demos/codata-control-flota-demo.html",ic:"chart"},{t:"Documentación legal",f:"demos/codata-documentacion-legal-demo.html",ic:"doc"},{t:"Pasaporte del trabajador",f:"demos/codata-pasaporte-trabajador-demo.html",ic:"qr"}]},
+ {k:"E-commerce",n:"Tienda y catálogo online",g:"g2",grad:"linear-gradient(160deg,#2F80ED,#2BD2FF)",
   d:"Su vitrina en un link: catálogo con fotos, carro y pago online. La manda por WhatsApp y vende sin depender del local.",
-  o:"Venta sin local",demo:"demos/codata-tienda-demo.html"},
+  o:"Venta sin local",demo:"demos/codata-tienda-demo.html",
+  rel:[{t:"Carta QR y pedidos",f:"demos/codata-carta-comanda-demo.html",ic:"qr"},{t:"Configurador 3D",f:"demos/codata-configurador-3d-demo.html",ic:"chart"},{t:"Kit de marca",f:"demos/codata-brandkit-demo.html",ic:"doc"}]},
  {k:"Presencia",n:"Su negocio serio en internet",g:"g4",grad:"linear-gradient(160deg,#FF7A59,#FF4D8D)",
   d:"Quién es, qué hace y botón directo a su WhatsApp. Para que lo encuentren y lo tomen en serio desde el primer clic.",
-  o:"Presencia que abre puertas",demo:"demos/codata-perfil-hub-demo.html"},
- {k:"Terreno",n:"Inspecciones con foto y firma",g:"g6",grad:"linear-gradient(160deg,#7C8DA6,#3B4A63)",
+  o:"Presencia que abre puertas",demo:"demos/codata-perfil-hub-demo.html",
+  rel:[{t:"Kit de marca",f:"demos/codata-brandkit-demo.html",ic:"doc"},{t:"CV y portafolio",f:"demos/codata-cv-portafolio-demo.html",ic:"doc"},{t:"Marketing que se juega",f:"demos/codata-juego-captacion-demo.html",ic:"star"}]},
+ {k:"Inspección",n:"Inspecciones con foto y firma",g:"g6",grad:"linear-gradient(160deg,#7C8DA6,#3B4A63)",
   d:"Checklists de terreno con foto, hora, ubicación y firma. El informe se arma solo y queda respaldo de todo lo hecho.",
-  o:"Evidencia de cada trabajo",demo:"demos/codata-inspeccion-terreno-demo.html"},
- {k:"Presencia",n:"Publicidad que se juega",g:"g4",grad:"linear-gradient(160deg,#FF7A59,#FF4D8D)",
+  o:"Evidencia de cada trabajo",demo:"demos/codata-inspeccion-terreno-demo.html",
+  rel:[{t:"Plan diario de trabajo",f:"demos/codata-plan-diario-demo.html",ic:"cal"},{t:"Calidad y mermas",f:"demos/codata-calidad-mermas-demo.html",ic:"gauge"},{t:"Pasaporte del trabajador",f:"demos/codata-pasaporte-trabajador-demo.html",ic:"qr"}]},
+ {k:"Marketing",n:"Publicidad que se juega",g:"g4",grad:"linear-gradient(160deg,#FF7A59,#FF4D8D)",
   d:"Una experiencia interactiva con su marca que captura clientes mientras entretiene. Nadie olvida a la marca con la que jugó.",
-  o:"Marketing que juega",demo:"demos/codata-juego-captacion-demo.html"},
- {k:"Ventas",n:"Configurador 3D de producto",g:"g2",grad:"linear-gradient(160deg,#2F80ED,#2BD2FF)",
+  o:"Marketing que juega",demo:"demos/codata-juego-captacion-demo.html",
+  rel:[{t:"Kit de marca",f:"demos/codata-brandkit-demo.html",ic:"doc"},{t:"Encuesta rápida",f:"demos/codata-encuesta-rapida-demo.html",ic:"gauge"},{t:"Reseñas 5★",f:"demos/codata-resenas-5estrellas-demo.html",ic:"star"}]},
+ {k:"Producto 3D",n:"Configurador 3D de producto",g:"g2",grad:"linear-gradient(160deg,#2F80ED,#2BD2FF)",
   d:"Su producto en tres dimensiones: el cliente lo arma, lo gira y lo pide desde la pantalla.",
-  o:"Su producto en 3D",demo:"demos/codata-configurador-3d-demo.html"},
- {k:"Clientes",n:"Tótem de autoatención",g:"g1",grad:"linear-gradient(160deg,#8B5CF6,#4F7DFF)",
+  o:"Su producto en 3D",demo:"demos/codata-configurador-3d-demo.html",
+  rel:[{t:"Tienda online",f:"demos/codata-tienda-demo.html",ic:"chart"},{t:"Cotizador automático",f:"demos/codata-cotizador-demo.html",ic:"doc"}]},
+ {k:"Autoatención",n:"Tótem de autoatención",g:"g1",grad:"linear-gradient(160deg,#8B5CF6,#4F7DFF)",
   d:"Autoatención en su local: el cliente se registra, pide y agenda solo desde una pantalla. Menos fila, mejor experiencia.",
-  o:"Atención sin filas",demo:"demos/codata-totem-autoatencion-demo.html"},
- {k:"Presencia",n:"CV y portafolio profesional",g:"g4",grad:"linear-gradient(160deg,#FF7A59,#FF4D8D)",
-  d:"Su trayectoria en un link elegante: experiencia, obras y contacto directo. Su nombre, presentado a la altura.",
-  o:"Su marca personal",demo:"demos/codata-cv-portafolio-demo.html"},
- {k:"Clientes",n:"Portal de clientes",g:"g1",grad:"linear-gradient(160deg,#8B5CF6,#4F7DFF)",
+  o:"Atención sin filas",demo:"demos/codata-totem-autoatencion-demo.html",
+  rel:[{t:"Carta QR y pedidos",f:"demos/codata-carta-comanda-demo.html",ic:"qr"},{t:"Agenda automática",f:"demos/codata-reservas-demo.html",ic:"cal"},{t:"Encuesta rápida",f:"demos/codata-encuesta-rapida-demo.html",ic:"gauge"}]},
+ {k:"Portal Cliente",n:"Portal de clientes",g:"g1",grad:"linear-gradient(160deg,#8B5CF6,#4F7DFF)",
   d:"Cada cliente ve el estado de su trabajo en un link propio: avances, fotos y entregas. Menos llamadas, más confianza.",
-  o:"El cliente siempre informado",demo:"demos/codata-portal-cliente-demo.html"}
+  o:"El cliente siempre informado",demo:"demos/codata-portal-cliente-demo.html",
+  rel:[{t:"Inspecciones con evidencia",f:"demos/codata-inspeccion-terreno-demo.html",ic:"qr"},{t:"Cotizador automático",f:"demos/codata-cotizador-demo.html",ic:"doc"},{t:"Generador de documentos",f:"demos/codata-generador-documentos-demo.html",ic:"doc"}]}
 ];
 /* hologramas por producto */
 var HOLOS={
@@ -888,7 +1021,8 @@ RING.forEach(function(p,i){
   b.className='card hoverable '+p.g;
   b.style.setProperty('--ry',(i*24)+'deg');
   b.setAttribute('aria-label',p.n);
-  b.innerHTML='<span class="cin '+p.g+'">'+holoIC(p.n)+'<span class="ck">'+p.k+'</span><span class="cn">'+p.n+'<small>'+p.o+'</small></span></span>';
+  var rl='';(p.rel||[]).slice(0,3).forEach(function(r){rl+='<span class="mw '+r.ic+'"></span>';});
+  b.innerHTML='<span class="cin '+p.g+'">'+holoIC(p.n)+'<span class="ck">'+p.k+'</span><span class="mws" aria-hidden="true">'+rl+'</span><span class="cn">'+p.n+'<small>'+p.o+'</small></span></span><span class="cfoil" style="--sd:'+(i*.55)+'s"></span>';
   b.addEventListener('click',function(e){openP(i,e);});
   fan.appendChild(b);
 });
@@ -1022,10 +1156,15 @@ function openP(i,e){
   document.getElementById('mdesc').textContent=p.d;
   document.getElementById('mhead').style.background=p.grad;
   document.getElementById('mchips').innerHTML='<span class="mc">Lo ve funcionando antes de decidir</span><span class="mc">Implementación de cero a cien</span><span class="mc">Capacitación y soporte continuo</span>';
+  var _rw=document.getElementById('mrel');
+  if(_rw){ if(p.rel&&p.rel.length){ _rw.style.display='';
+    _rw.innerHTML='<div class="mrt">Vea también — toque para cambiar la demo en pantalla:</div><div class="mrg">'+p.rel.map(function(r){return '<button class="mrb" data-f="'+r.f+'"><span class="mwv '+r.ic+'"></span><span>'+r.t+'</span></button>';}).join('')+'</div>';
+    Array.prototype.forEach.call(_rw.querySelectorAll('.mrb'),function(btn){btn.addEventListener('click',function(){var f=btn.getAttribute('data-f');var fr=document.getElementById('mfr');if(fr)fr.src=f;var md=document.getElementById('mdemo');if(md)md.href=f;Array.prototype.forEach.call(_rw.querySelectorAll('.mrb'),function(b2){b2.classList.remove('on');});btn.classList.add('on');});});
+  } else {_rw.style.display='none';_rw.innerHTML='';} }
   var _md=document.getElementById('mdemo'); _md.style.display=''; _md.href=p.demo;
   var _pv=document.getElementById('mprev'); if(_pv)_pv.style.display='';
   var _fr=document.getElementById('mfr'); if(_fr){_fr.src=p.demo;}
-  document.getElementById('mwa').href='https://wa.me/56941316203?text='+encodeURIComponent('Hola CO-DATA, quiero cotizar «'+p.n+'».');
+  document.getElementById('mwa').href='https://wa.me/56957898782?text='+encodeURIComponent('Hola CO-DATA, quiero cotizar «'+p.n+'».');
   if(rmq){mbg.classList.add('open');return;}
   wipe.style.background=p.grad;
   wipe.style.setProperty('--cx',x+'px');wipe.style.setProperty('--cy',y+'px');
@@ -1151,14 +1290,16 @@ CCATS.forEach(function(a,ai){
   });
   chipsBox.appendChild(c);
 });
-var lastC='';
+var lastC='',CCNT={};CATL.forEach(function(p){CCNT[p.c]=(CCNT[p.c]||0)+1;});
 CATL.forEach(function(p,i){
   if(p.c!==lastC){lastC=p.c;
-    var dv=document.createElement('div');dv.className='cdiv';dv.dataset.a=p.c;dv.textContent=p.c;grid.appendChild(dv);}
+    var dv=document.createElement('div');dv.className='cdiv';dv.dataset.a=p.c;
+    dv.innerHTML='<span class="sn">✦ '+p.c+'</span><span class="sc">SOBRE · '+CCNT[p.c]+' LÁMINA'+(CCNT[p.c]>1?'S':'')+'</span>';grid.appendChild(dv);}
   var tl=document.createElement('button');tl.className='ct hoverable';tl.dataset.a=p.c;tl.type='button';
   var sd=p.d.length>74?p.d.slice(0,74)+'…':p.d;
-  tl.innerHTML='<div class="band '+p.g+'"><span class="ix">'+(i<9?'0':'')+(i+1)+'</span><span class="ar">'+(p.f?'▶ demo':'')+'</span></div>'
-    +'<h4>'+p.n+'</h4><p>'+sd+'</p><div class="go">Abrir →</div>';
+  var num=(i+1);num=(num<10?'00':num<100?'0':'')+num;
+  tl.innerHTML='<div class="lam"><span class="lfoil"></span><div class="band '+p.g+'"><span class="ix">Nº '+num+'</span>'+(p.f?'<span class="ar">● DEMO EN VIVO</span>':'')+'</div>'
+    +'<h4>'+p.n+'</h4><p>'+sd+'</p><div class="lft"><span class="cx">'+p.c+'</span><span class="go">Abrir →</span></div></div>';
   tl.addEventListener('click',function(e){openC(i,e);});
   if(matchMedia('(pointer:fine)').matches && !rmq){
     tl.addEventListener('mousemove',function(e){
@@ -1191,7 +1332,7 @@ function openC(i,e){
   var md=document.getElementById('mdemo'), pv=document.getElementById('mprev'), fr=document.getElementById('mfr');
   if(p.f){md.style.display='';md.href=p.f;pv.style.display='';fr.src=p.f;}
   else{md.style.display='none';pv.style.display='none';if(fr)fr.src='';}
-  document.getElementById('mwa').href='https://wa.me/56941316203?text='+encodeURIComponent('Hola CO-DATA, quiero cotizar \u00ab'+p.n+'\u00bb.');
+  document.getElementById('mwa').href='https://wa.me/56957898782?text='+encodeURIComponent('Hola CO-DATA, quiero cotizar \u00ab'+p.n+'\u00bb.');
   if(rmq){mbg.classList.add('open');return;}
   wipe.style.background=p.grad;
   wipe.style.setProperty('--cx',x+'px');wipe.style.setProperty('--cy',y+'px');
@@ -1239,7 +1380,7 @@ function nThink(q){
   if(/ley|dato|21|multa|cumpl/.test(s))return nBot('La <b>Ley 21.719</b> rige en diciembre 2026 con multas de hasta 20.000 UTM. Le abro el ecosistema completo — qué exige, si le aplica y cómo lo dejamos cumpliendo:',[['Abrir ecosistema Ley','ley']]);
   if(/terreno|faena|trabajador|documento|acceso/.test(s))return nBot('Para terreno tenemos el <b>Pasaporte del trabajador</b> e <b>Inspecciones con foto y firma</b>. ¿Cuál le abro?',[['Pasaporte','p:5'],['Inspecciones','p:14']]);
   if(/cv|curric|portafolio|marca personal|linkedin|profesional/.test(s)){var rp=nBuscar('portafolio profesional cv marca');if(rp.length){var ap=rp.map(function(ix){return [CATL[ix].n,'c:'+ix];});return nBot('Para su <b>desarrollo profesional</b> tenemos estas piezas:',ap);}}
-  if(/caso|resultado|prueba|confia/.test(s))return nBot('Operamos lo nuestro con esta misma tecnología: <b>Lavame x Fa</b>, servicio real funcionando hoy en Santiago con reservas 24/7 y canal directo. Se lo muestro:',[['Ver el caso real','caso']]);
+  if(/caso|resultado|prueba|confia/.test(s))return nBot('Operamos lo nuestro con esta misma tecnología: <b>Lavame x Fa</b> — lavado ecológico a domicilio funcionando hoy en Santiago, con reservas 24/7 y canal directo: <a href="https://lavamexfa.com" target="_blank" rel="noopener" style="color:#7CFFB2">lavamexfa.com ↗</a>. ¿Buscamos la suya?',[['Ver la galería','cat'],['Cotizar','wa']]);
   if(/quien|equipo|vision|historia|somos/.test(s))return nBot('Somos un grupo de expertos de distintas áreas — operaciones, ventas, marketing, ingeniería y datos. Le abro nuestra ventana de <b>Visión</b>:',[['Conocer al equipo','vis']]);
   if(/demo|catalogo|catálogo|solucion|pieza|servicio|mostrar|ver todo/.test(s))return nBot('Le abro la galería completa: <b>'+CATL.length+' modelos</b> ordenados por categoría — muchos con demo en vivo.',[['Ver la galería','cat']]);
   if(/como trabajan|metodo|proceso|confianza/.test(s))return nBot('Simple: <b>escuchamos</b> su operación, <b>se lo mostramos funcionando</b> con su marca antes de cualquier compromiso, y si le hace sentido, <b>implementamos de cero a cien</b> con capacitación y soporte continuo.',[['Ver la galería','cat'],['Cotizar','wa']]);
@@ -1259,7 +1400,7 @@ nin.addEventListener('keydown',function(e){if(e.key==='Enter')nSendMsg();});
 nmsgs.addEventListener('click',function(e){
   var b=e.target.closest('.nact');if(!b)return;var a=b.dataset.act;
   if(a==='cat'){nodo.classList.remove('open');openCat();}
-  else if(a==='wa'){window.open('https://wa.me/56941316203?text='+encodeURIComponent('Hola CO-DATA, vengo de conversar con NODO. Quiero cotizar.'),'_blank');}
+  else if(a==='wa'){window.open('https://wa.me/56957898782?text='+encodeURIComponent('Hola CO-DATA, vengo de conversar con NODO. Quiero cotizar.'),'_blank');}
   else if(a==='ley'){nodo.classList.remove('open');leyOpen();}
   else if(a==='met'){nThink('como trabajan');}
   else if(a==='vis'){nodo.classList.remove('open');visOpen();}
@@ -1316,6 +1457,31 @@ document.getElementById('leyGhost').addEventListener('click',leyOpen);
 document.getElementById('leyX').addEventListener('click',leyClose);
 var nhintEl=document.getElementById('nhint');
 if(nhintEl){setTimeout(function(){if(!nodoOpened)nhintEl.classList.add('on');},12000);nhintEl.addEventListener('click',nOpen);}
+/* ================= chats en vivo: escritura en loop ================= */
+(function(){
+  var boxes=document.querySelectorAll('.lc-msgs');if(!boxes.length)return;
+  function now(){var d=new Date(),h=d.getHours(),m=d.getMinutes();return (h<10?'0':'')+h+':'+(m<10?'0':'')+m;}
+  boxes.forEach(function(box,bi){
+    var msgs=JSON.parse(box.getAttribute('data-chat'));
+    function cycle(){
+      box.innerHTML='';var t=900+bi*600;
+      msgs.forEach(function(mm){
+        setTimeout(function(){
+          var td=document.createElement('div');td.className='lc-b td '+mm[0];td.innerHTML='<i></i><i></i><i></i>';box.appendChild(td);
+          requestAnimationFrame(function(){td.classList.add('on');});
+        },t);
+        setTimeout(function(){
+          box.querySelectorAll('.td').forEach(function(x){x.remove();});
+          var b=document.createElement('div');b.className='lc-b '+mm[0];b.innerHTML=mm[1]+'<span class="tm">'+now()+'</span>';box.appendChild(b);
+          requestAnimationFrame(function(){b.classList.add('on');});
+        },t+900+Math.random()*400);
+        t+=2300;
+      });
+      setTimeout(cycle,t+4200);
+    }
+    setTimeout(cycle,400+bi*350);
+  });
+})();
 
 /* ================= bots vivos: conversan en loop ================= */
 var BOTCONV=[

@@ -130,12 +130,24 @@
     var a=$("#answer");a.classList.add("on");a.innerHTML='<div class="skel" style="width:90%"></div><div class="skel" style="width:100%"></div><div class="skel" style="width:70%"></div>';
     var ctx2="Datos del panel de "+brand+": ventas últimos 7 meses (millones CLP): "+sales.join(", ")+". Pedidos del mes: 142 (+6%). Clientes nuevos: 38 (-3%). Ticket promedio: $59.000 (+9%). Embudo: "+pipe.map(function(p){return p[0]+" "+p[1];}).join(", ")+".";
     var sys="Eres un copiloto de negocios. Con los datos del panel, responde la pregunta del dueño en español de Chile, breve y accionable (máx 4 frases o viñetas). Básate en los números dados; no inventes datos nuevos.";
-    fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:1000,system:sys,messages:[{role:"user",content:ctx2+"\n\nPregunta: "+q}]})
-    }).then(function(r){return r.json();}).then(function(d){
-      var t="";if(d&&d.content)t=d.content.filter(function(i){return i.type==="text";}).map(function(i){return i.text;}).join("").trim();
-      a.textContent=t||"No pude responder ahora.";
-    }).catch(function(){a.textContent="No pude conectar ahora ⚠️. Reintenta en unos segundos.";});
+    (function(){
+      var s=q.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+      var n=sales.length,last=sales[n-1],prev=sales[n-2],tot=0,mx=0,mi=0;
+      for(var i2=0;i2<n;i2++){tot+=sales[i2];if(sales[i2]>sales[mx])mx=i2;if(sales[i2]<sales[mi])mi=i2;}
+      var avg=tot/n,dd=(last-prev)/prev*100,conv=Math.round(pipe[pipe.length-1][1]/pipe[0][1]*100);
+      function f1(x){return (Math.round(x*10)/10).toString().replace(".",",");}
+      var t;
+      if(/mejor|record|alto|peak/.test(s))t="📈 Su mejor mes fue "+months[mx]+" con $"+f1(sales[mx])+"M. Viene en racha al alza: replique lo que hizo ese mes (campañas, disponibilidad, seguimiento).";
+      else if(/peor|bajo|malo|caida|cayo/.test(s))t="El mes más débil fue "+months[mi]+" ($"+f1(sales[mi])+"M). Desde entonces la curva se recuperó: hoy está "+f1((last/sales[mi]-1)*100)+"% por sobre ese punto.";
+      else if(/tendencia|proyec|futuro|viene|crec/.test(s))t="Tendencia "+(dd>=0?"al alza":"a la baja")+": "+months[n-1]+" cerró en $"+f1(last)+"M ("+(dd>=0?"+":"")+f1(dd)+"% vs "+months[n-2]+"), promedio del período $"+f1(avg)+"M. Manteniendo el ritmo, el próximo mes debería superar los $"+f1(last*(1+Math.max(dd,0)/100))+"M.";
+      else if(/embudo|pipeline|cierre|convers/.test(s))t="Su embudo convierte "+conv+"% de prospecto a cierre ("+pipe[0][1]+" → "+pipe[pipe.length-1][1]+"). El mayor escape está entre "+pipe[1][0]+" ("+pipe[1][1]+") y "+pipe[2][0]+" ("+pipe[2][1]+"): un seguimiento automático ahí es su palanca más rentable.";
+      else if(/ticket|promedio/.test(s))t="Ticket promedio: $59.000 (+9%). Con 142 pedidos/mes, cada $1.000 extra de ticket son ~$142.000 más al mes — pruebe combos o adicionales al momento del pedido.";
+      else if(/cliente/.test(s))t="Captó 38 clientes nuevos este mes (−3%). Ojo: sus ventas suben por ticket y recompra, no por volumen nuevo. Active recuperación de clientes dormidos para reforzar la entrada.";
+      else if(/pedido/.test(s))t="Van 142 pedidos este mes (+6%). Con la conversión actual del embudo ("+conv+"%), subir contactados un 10% agregaría ~"+Math.round(pipe[0][1]*0.1*conv/100)+" cierres adicionales.";
+      else if(/que hago|mejorar|recomien|consejo|foco|priorid/.test(s))t="Con sus números, 3 focos: 1) automatice el seguimiento entre "+pipe[1][0].toLowerCase()+" y propuesta — ahí pierde más; 2) suba el ticket con adicionales (el +9% demuestra que hay espacio); 3) reactive clientes antiguos: los nuevos vienen cayendo −3%.";
+      else t="Resumen: ventas $"+f1(last)+"M en "+months[n-1]+" ("+(dd>=0?"+":"")+f1(dd)+"%), promedio $"+f1(avg)+"M, conversión de embudo "+conv+"%, ticket $59.000 (+9%). Pregúnteme por tendencia, embudo, ticket o dónde poner el foco.";
+      setTimeout(function(){a.textContent=t;},650+Math.random()*550);
+    })();
   }
   $("#go").onclick=ask;$("#q").addEventListener("keydown",function(e){if(e.key==="Enter")ask();});
 

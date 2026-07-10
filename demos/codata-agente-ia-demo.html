@@ -116,14 +116,22 @@
     var sys="Eres el asistente de atención de un negocio: "+biz+" llamado \""+brand+"\". "+
       "Responde como vendedor cercano y útil en español de Chile, breve (2-4 frases), siempre orientado a que el cliente avance (reservar, comprar, visitar). "+
       "Si no sabes un dato puntual (precio exacto, dirección), no lo inventes: ofrece tomar el contacto o continuar por WhatsApp. Usa un tono amable y profesional.";
-    fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:1000,system:sys,messages:history})
-    }).then(function(r){return r.json();}).then(function(d){
-      typing(false);
-      var t="";if(d&&d.content)t=d.content.filter(function(i){return i.type==="text";}).map(function(i){return i.text;}).join("").trim();
-      t=t||"¿Te ayudo a coordinar por WhatsApp?";
-      add("bot",t);history.push({role:"assistant",content:t});
-    }).catch(function(){typing(false);add("bot","Se me cayó la conexión 😅. ¿Seguimos por WhatsApp y te respondo al tiro?");});
+    (function(){
+      function nz(x){return (x||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");}
+      function pk(a){return a[Math.floor(Math.random()*a.length)];}
+      var q=nz(history[history.length-1].content),t;
+      if(/hola|buenas|buen dia|que tal|wena/.test(q))t=pk(["¡Hola! 👋 Bienvenido a "+brand+". ¿En qué le puedo ayudar hoy?","¡Buenas! Aquí "+brand+", un gusto atenderle. Cuénteme qué necesita."]);
+      else if(/precio|valor|cuanto|cuesta|tarifa|sale/.test(q))t=pk(["Tenemos opciones para distintos presupuestos. Para darle el valor exacto necesito un par de datos — ¿lo vemos por WhatsApp y le cotizo al tiro?","El valor depende del detalle. Si me deja su contacto, le envío la cotización formal hoy mismo. ¿Le parece?"]);
+      else if(/hora|agenda|reserva|disponib|cupo|cita/.test(q))t=pk(["¡Claro! Tenemos horas disponibles esta semana. ¿Prefiere mañana o tarde? Se la reservo de inmediato con recordatorio automático. 📅","Sí, quedan cupos. Dígame el día que le acomoda y queda agendado al tiro."]);
+      else if(/donde|ubicac|direccion|llega/.test(q))t="Atendemos en la zona y también coordinamos a domicilio según el servicio. Por WhatsApp le mando la ubicación exacta y referencias. 📍";
+      else if(/horario|abren|cierran|atienden/.test(q))t="Atendemos de lunes a sábado en horario continuado — y por este canal respondo 24/7, así ninguna consulta queda esperando.";
+      else if(/servicio|producto|hacen|ofrecen|menu|catalogo|tienen/.test(q))t="En "+brand+" tenemos varias alternativas según lo que busque. ¿Le muestro las más pedidas, o me cuenta su caso y le recomiendo la ideal?";
+      else if(/promo|descuento|oferta|convenio/.test(q))t="¡Buena pregunta! Tenemos beneficios para clientes nuevos y frecuentes. Déjeme su contacto y le envío la promoción vigente. 🎁";
+      else if(/pago|transferencia|tarjeta|efectivo|webpay|cuota/.test(q))t="Aceptamos transferencia, tarjetas y pago en línea. Le mando el link de pago apenas confirmemos su pedido. 💳";
+      else if(/gracias|chao|adios|nos vemos|listo/.test(q))t="¡Gracias a usted! Quedo atento por aquí o por WhatsApp. ¡Que le vaya muy bien! 🙌";
+      else t=pk(["Le entiendo. Para ayudarle mejor, ¿me da un poco más de detalle? También podemos seguir por WhatsApp y lo resolvemos al tiro.","¡Perfecto, tomo nota! ¿Quiere que le agende una hora o le envíe más información por WhatsApp?"]);
+      setTimeout(function(){typing(false);add("bot",t);history.push({role:"assistant",content:t});},700+Math.random()*800);
+    })();
   }
 
   $("#send").onclick=function(){var v=$("#inp").value.trim();if(v){$("#inp").value="";ask(v);}};

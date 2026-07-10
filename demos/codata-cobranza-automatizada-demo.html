@@ -137,13 +137,16 @@
     $("#md").innerHTML='<h3>Recordatorio de pago</h3><div class="to">Para '+v.c+' · '+v.doc+' · '+clp(v.amt)+'</div><div class="msg" id="msgBox"><div class="skel" style="width:90%"></div><div class="skel" style="width:100%"></div><div class="skel" style="width:70%"></div></div><div class="act"><button class="cancel" id="cancel">Cancelar</button><button class="send" id="sendBtn" disabled>Enviar WhatsApp</button></div>';
     $("#ov").classList.add("on");$("#cancel").onclick=function(){$("#ov").classList.remove("on");};
     var sys="Eres asistente de cobranza cordial. Escribe un mensaje breve de WhatsApp recordando un pago pendiente, profesional y amable, sin sonar agresivo. Español de Chile. Incluye monto y documento. Máx 4 líneas. Responde solo el mensaje.";
-    fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:1000,system:sys,messages:[{role:"user",content:"Cliente: "+v.c+". Documento: "+v.doc+". Monto: "+clp(v.amt)+". Estado: "+st[1]+"."}]})
-    }).then(function(r){return r.json();}).then(function(d){
-      var t="";if(d&&d.content)t=d.content.filter(function(x){return x.type==="text";}).map(function(x){return x.text;}).join("").trim();t=t.replace(/```/g,"").trim()||"Estimado cliente, le recordamos su pago pendiente.";
-      var mb=$("#msgBox");if(mb)mb.textContent=t;
-      var sb=$("#sendBtn");if(sb){sb.disabled=false;sb.onclick=function(){inv[i].sent=true;$("#ov").classList.remove("on");window.open("https://wa.me/?text="+encodeURIComponent(t),"_blank");render();toast("Recordatorio enviado 💬");};}
-    }).catch(function(){var mb=$("#msgBox");if(mb)mb.textContent="No pude redactar ahora. Reintenta.";});
+    (function(){
+      var T=["Estimado(a) "+v.c+":\n\nLe recordamos amablemente el documento "+v.doc+" por "+clp(v.amt)+", actualmente "+st[1].toLowerCase()+". Puede regularizarlo en un minuto en este link: [link de pago].\n\nCualquier duda, quedamos atentos. ¡Gracias!",
+      "Hola "+v.c+" 👋\n\nUn recordatorio cordial: el documento "+v.doc+" por "+clp(v.amt)+" figura "+st[1].toLowerCase()+". Le dejamos el link para pagarlo al tiro: [link de pago].\n\nSi ya lo pagó, ignore este mensaje. ¡Muchas gracias!",
+      "Estimado(a) "+v.c+":\n\nEsperando que esté muy bien, le recordamos el pago del documento "+v.doc+" ("+clp(v.amt)+"). Para su comodidad puede pagar aquí: [link de pago].\n\nGracias por su preferencia."];
+      var t=T[Math.floor(Math.random()*T.length)];
+      setTimeout(function(){
+        var mb=$("#msgBox");if(mb)mb.textContent=t;
+        var sb=$("#sendBtn");if(sb){sb.disabled=false;sb.onclick=function(){inv[i].sent=true;$("#ov").classList.remove("on");window.open("https://wa.me/?text="+encodeURIComponent(t),"_blank");render();toast("Recordatorio enviado 💬");};}
+      },750+Math.random()*550);
+    })();
   }
   function toast(m){var t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove("show");},1800);}
   $("#ov").onclick=function(e){if(e.target===$("#ov"))$("#ov").classList.remove("on");};

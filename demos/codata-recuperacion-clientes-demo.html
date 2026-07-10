@@ -113,12 +113,14 @@
   $("#ai").onclick=function(){
     var offer=$("#offer").value.trim();var btn=$("#ai");btn.disabled=true;$("#msg").value="";$("#msg").placeholder="Redactando con IA…";
     var sys="Eres redactor de marketing. Escribe un mensaje breve y cálido de WhatsApp para reactivar a un cliente que no compra hace tiempo, ofreciendo el gancho indicado. Español de Chile, cercano, sin sonar spam, CTA claro. Usa {nombre}. Máx 4 líneas. Responde solo el mensaje.";
-    fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:1000,system:sys,messages:[{role:"user",content:"Oferta: "+offer}]})
-    }).then(function(r){return r.json();}).then(function(d){
-      var t="";if(d&&d.content)t=d.content.filter(function(i){return i.type==="text";}).map(function(i){return i.text;}).join("").trim();
-      $("#msg").value=t.replace(/```/g,"").trim();
-    }).catch(function(){$("#msg").placeholder="No pude redactar. Reintenta.";}).then(function(){btn.disabled=false;});
+    (function(){
+      var of2=offer||"un beneficio especial de reencuentro";
+      var T=["Hola {nombre} 👋 ¡Te tenemos presente! Hace tiempo no nos visitas y preparamos algo para ti: "+of2+". Válido esta semana — responde este mensaje y te lo dejamos reservado. ¡Te esperamos!",
+      "Hola {nombre}, ¿cómo estás? Nos acordamos de ti 💚 Queremos que vuelvas: "+of2+", solo por estos días. Escríbenos y coordinamos al tiro.",
+      "¡Hola {nombre}! Se te echa de menos por acá. Para tu regreso preparamos "+of2+". Cupos limitados — responde SÍ y te guardamos el tuyo. 🙌"];
+      var t=T[Math.floor(Math.random()*T.length)];
+      setTimeout(function(){$("#msg").value=t;btn.disabled=false;},700+Math.random()*600);
+    })();
   };
   $("#send").onclick=function(){
     var s=selected();var pot=s.reduce(function(a,c){return a+c.v;},0);

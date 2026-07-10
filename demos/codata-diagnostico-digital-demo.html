@@ -109,12 +109,23 @@
     var sys="Eres consultor de transformación digital para pymes. Con las respuestas de un diagnóstico, responde SOLO JSON válido sin markdown, forma exacta:\n"+
       '{"nivel":"...","resumen":"...","brechas":["...","..."],"recomendaciones":[{"pri":"alta|media|win","t":"...","d":"..."}]}\n'+
       "nivel: una palabra (Inicial/Básico/Intermedio/Avanzado). resumen: 2 frases. brechas: 3 puntos débiles concretos. recomendaciones: 4 acciones, cada una con pri (alta=importante, media, win=quick win fácil), t=título corto, d=beneficio en 1 frase. Español de Chile, concreto.";
-    fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:1000,system:sys,messages:[{role:"user",content:"Negocio: "+brand+"\nRespuestas:\n"+resumen+"\nPuntaje calculado: "+score+"/100"}]})
-    }).then(function(r){return r.json();}).then(function(d){
-      var raw="";if(d&&d.content)raw=d.content.filter(function(i){return i.type==="text";}).map(function(i){return i.text;}).join("").trim();
-      raw=raw.replace(/```json|```/g,"").trim();show(score,JSON.parse(raw));
-    }).catch(function(){$("#loading").classList.remove("on");$("#quiz").innerHTML='<div class="step on"><h2>Ups</h2><div class="sub">No se pudo analizar ahora. Reintenta.</div></div>';});
+    (function(){
+      var niv=score<35?"Inicial":score<55?"Básico":score<75?"Intermedio":"Avanzado";
+      var AR=[
+        {b:"La captación depende del boca a boca: sin canal propio, el flujo de clientes nuevos no es controlable.",r:{pri:"alta",t:"Presencia digital que capta",d:"Web propia con botón directo a WhatsApp: lo encuentran y le escriben en un clic."}},
+        {b:"La agenda y los pedidos se llevan a mano: horas perdidas, errores y dependencia de una sola persona.",r:{pri:"alta",t:"Agenda y pedidos automáticos",d:"El cliente reserva o pide solo, con confirmación y recordatorio sin intervención."}},
+        {b:"Cotizar demora: cada día de espera es una venta que se enfría o se va al competidor.",r:{pri:"win",t:"Cotizador automático",d:"Cotización profesional con su marca en un minuto, con seguimiento incluido."}},
+        {b:"No hay medición confiable: se decide a ciegas, sin saber qué funciona y qué no.",r:{pri:"media",t:"Panel de control en vivo",d:"Ventas, pedidos y clientes en una sola pantalla, desde el celular."}},
+        {b:"La presencia digital es débil: quien lo busca en Google no encuentra razones para elegirlo.",r:{pri:"media",t:"Reputación 5★ automática",d:"Cada cliente satisfecho deja su reseña en Google con un toque."}}];
+      var idx=[];for(var i2=0;i2<Q.length;i2++)idx.push(i2);
+      idx.sort(function(a2,b2){return ans[a2]-ans[b2];});
+      var brechas=[],recs=[];
+      for(var j2=0;j2<idx.length&&brechas.length<3;j2++){if(ans[idx[j2]]<=2)brechas.push(AR[idx[j2]].b);}
+      var j3=0;while(brechas.length<3){if(brechas.indexOf(AR[idx[j3]].b)<0)brechas.push(AR[idx[j3]].b);j3++;}
+      for(var k2=0;k2<idx.length&&recs.length<4;k2++)recs.push(AR[idx[k2]].r);
+      var resumen2=niv==="Avanzado"?"Su operación está sobre la media: lo que queda es automatizar los últimos procesos manuales. Las siguientes acciones convierten esa ventaja en distancia.":"Su negocio funciona, pero varios procesos clave siguen siendo manuales. La buena noticia: cada brecha detectada tiene una solución concreta y de rápida implementación.";
+      setTimeout(function(){show(score,{nivel:niv,resumen:resumen2,brechas:brechas,recomendaciones:recs});},900+Math.random()*700);
+    })();
   }
   function show(score,o){
     $("#loading").classList.remove("on");

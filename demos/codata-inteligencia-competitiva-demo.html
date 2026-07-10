@@ -126,12 +126,18 @@
     var data=factors.map(function(f,i){return f+": "+brand+" "+you[i]+"/10 vs "+rivals[ri].n+" "+rivals[ri].v[i]+"/10";}).join("\n");
     var sys="Eres analista de estrategia comercial. Compara a "+brand+" contra un competidor en varios factores (escala 0-10). "+
       "En español de Chile, breve: di en qué factores "+brand+" GANA (y cómo usarlo para vender), y en cuáles está DÉBIL (y 1 acción concreta para cada uno). Máx 5 viñetas. Sé directo y accionable.";
-    fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:1000,system:sys,messages:[{role:"user",content:data}]})
-    }).then(function(r){return r.json();}).then(function(d){
-      var t="";if(d&&d.content)t=d.content.filter(function(i){return i.type==="text";}).map(function(i){return i.text;}).join("").trim();
-      a.textContent=t||"No pude analizar ahora.";
-    }).catch(function(){a.textContent="No pude conectar ahora ⚠️. Reintenta.";}).then(function(){$("#ai").disabled=false;});
+    (function(){
+      var ACC={"Precio":"comunique valor, no precio — muestre lo que incluye y ofrezca opciones por tramo.","Calidad":"documente su calidad con fotos y garantía por escrito en cada cotización.","Rapidez":"prometa plazos concretos y cúmplalos con agenda y seguimiento automático.","Atención":"responda antes de 5 minutos — un asistente 24/7 no deja consultas sin respuesta.","Presencia digital":"web propia + reseñas activas: quien lo busca debe encontrarlo mejor presentado que el rival.","Garantía":"ponga la garantía por escrito y visible — da confianza y cierra ventas."};
+      var win=[],lose=[];
+      for(var i2=0;i2<factors.length;i2++){var d2=you[i2]-rivals[ri].v[i2];if(d2>0)win.push([factors[i2],you[i2],rivals[ri].v[i2],d2]);else if(d2<0)lose.push([factors[i2],you[i2],rivals[ri].v[i2],d2]);}
+      win.sort(function(a2,b2){return b2[3]-a2[3];});lose.sort(function(a2,b2){return a2[3]-b2[3];});
+      var L=[];
+      for(var w2=0;w2<Math.min(2,win.length);w2++)L.push("✅ GANA en "+win[w2][0]+" ("+win[w2][1]+" vs "+win[w2][2]+"): úselo como argumento central al vender — dígalo explícito en cada propuesta.");
+      for(var l2=0;l2<Math.min(3,lose.length);l2++)L.push("⚠️ DÉBIL en "+lose[l2][0]+" ("+lose[l2][1]+" vs "+lose[l2][2]+"): "+(ACC[lose[l2][0]]||"defina una acción concreta este mes."));
+      if(!L.length)L.push("Están parejos en todos los factores: la diferencia la hará la ejecución — rapidez de respuesta y presencia digital.");
+      var t2=L.join("\n");
+      setTimeout(function(){a.textContent=t2;$("#ai").disabled=false;},700+Math.random()*600);
+    })();
   };
 
   var SW=[{c:"#DB2777",c2:"#F472B6"},{c:"#2563EB",c2:"#5B8DEF"},{c:"#0D9488",c2:"#2DD4BF"},{c:"#7C3AED",c2:"#A855F7"},{c:"#EA580C",c2:"#F97A3D"}];
