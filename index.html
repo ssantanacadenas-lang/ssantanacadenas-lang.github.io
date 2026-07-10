@@ -586,6 +586,32 @@ section>.wrap{position:relative;z-index:1}
   .hint{margin-top:16px}
   .wnote{margin:14px 22px 0;font-size:11.5px}
 }
+/* X siempre visibles en móvil: visión y ley */
+@media(max-width:760px){
+  #vis.open #visX,#leyx.open #leyX{position:fixed;top:12px;right:12px;z-index:260;width:42px;height:42px;background:rgba(10,10,14,.72);border:1px solid rgba(255,255,255,.4);border-radius:50%;color:#fff}
+}
+/* botones sociales modernos */
+.socials{display:flex;gap:9px;align-items:center}
+.soc{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--mut);transition:.25s;text-decoration:none}
+.soc svg{width:19px;height:19px}
+.soc:hover{transform:translateY(-2px);color:#fff}
+.swa:hover{background:#128C4B;border-color:#25D366}
+.sli:hover{background:#0A66C2;border-color:#4a9ce8}
+.sig:hover{background:linear-gradient(135deg,#F58529,#DD2A7B,#8134AF);border-color:#DD2A7B}
+.stk:hover{background:#111;border-color:#69C9D0}
+.sml:hover{background:#2F80ED;border-color:#2BD2FF}
+/* menú móvil */
+#mmenu{display:none;width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid var(--line);cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:4.5px;padding:0}
+#mmenu span{display:block;width:17px;height:1.8px;background:var(--ink);border-radius:2px;transition:.3s}
+#mmenu.on span:nth-child(1){transform:translateY(6.3px) rotate(45deg)}
+#mmenu.on span:nth-child(2){opacity:0}
+#mmenu.on span:nth-child(3){transform:translateY(-6.3px) rotate(-45deg)}
+#mdrop{position:fixed;top:64px;left:12px;right:12px;z-index:200;background:rgba(16,16,22,.97);border:1px solid rgba(255,255,255,.14);border-radius:18px;padding:8px;display:none;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.5);backdrop-filter:blur(10px)}
+#mdrop.on{display:flex;animation:mdIn .25s ease}
+@keyframes mdIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+#mdrop a{padding:14px 16px;color:var(--ink);text-decoration:none;font-size:14.5px;border-radius:12px;transition:.2s}
+#mdrop a:active,#mdrop a:hover{background:rgba(255,255,255,.08)}
+@media(max-width:620px){#mmenu{display:flex}}
 /* ===== NODO ===== */
 #nodoBtn{position:fixed;right:18px;bottom:18px;z-index:145;width:58px;height:58px;border-radius:50%;background:var(--btn);color:var(--btnink);border:none;cursor:pointer;box-shadow:0 14px 36px rgba(0,0,0,.3);display:grid;place-items:center;transition:.25s}
 #nodoBtn:hover{transform:scale(1.07)}
@@ -659,7 +685,15 @@ section>.wrap{position:relative;z-index:1}
       <a href="#" id="navVis">Visión</a>
       <a href="#" id="navLey">Ley 21.719</a>
       <a class="pill hoverable" href="https://wa.me/56957898782?text=Hola%20CO-DATA%2C%20quiero%20hablar%20de%20mi%20negocio." target="_blank" rel="noopener">Hablemos</a>
+      <button id="mmenu" type="button" aria-label="Menú"><span></span><span></span><span></span></button>
     </div>
+  </div>
+  <div id="mdrop">
+    <a href="#" data-go="cat">🃏 El Álbum — 83 modelos</a>
+    <a href="#vivo" data-go="vivo">🤖 La IA trabajando</a>
+    <a href="#" data-go="vis">✦ Quiénes somos</a>
+    <a href="#" data-go="ley">⚖️ Ley 21.719</a>
+    <a href="https://wa.me/56957898782?text=Hola%20CO-DATA%2C%20quiero%20hablar%20de%20mi%20negocio." target="_blank" rel="noopener">💬 Hablemos por WhatsApp</a>
   </div>
 </nav>
 
@@ -845,10 +879,13 @@ section>.wrap{position:relative;z-index:1}
       <a href="#" id="footCat">Galería de modelos</a>
       <a href="#" id="footLey">Ley 21.719</a>
       <a href="#" id="footVis">Quiénes somos</a>
-      <a href="https://wa.me/56957898782" target="_blank" rel="noopener">+56 9 5789 8782</a>
-      <a href="https://www.linkedin.com/company/co-data-chile/" target="_blank" rel="noopener">LinkedIn ↗</a>
-      <a href="https://www.instagram.com/codata.cl/" target="_blank" rel="noopener">Instagram ↗</a>
-      <a href="https://www.tiktok.com/@codata.cl" target="_blank" rel="noopener">TikTok ↗</a>
+      <div class="socials">
+        <a class="soc swa" href="https://wa.me/56957898782" target="_blank" rel="noopener" aria-label="WhatsApp" title="WhatsApp +56 9 5789 8782"><svg viewBox="0 0 24 24"><path d="M12 2.5A9.5 9.5 0 0 0 3.8 16.8L2.5 21.5l4.8-1.3A9.5 9.5 0 1 0 12 2.5Zm5 13.2c-.2.6-1.2 1.2-1.7 1.2-.4.1-1 .1-1.6-.1-.4-.1-.9-.3-1.5-.6-2.6-1.1-4.3-3.8-4.4-4-.1-.2-1.1-1.4-1.1-2.7s.7-1.9.9-2.2c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4.2.5.7 1.8.8 1.9.1.1.1.3 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1l1.8.8c.3.1.4.2.5.3 0 .2 0 .7-.2 1.2Z" fill="currentColor"/></svg></a>
+        <a class="soc sli" href="https://www.linkedin.com/company/co-data-chile/" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24"><path d="M4.98 3.5A2 2 0 1 1 5 7.5a2 2 0 0 1 0-4ZM3.5 9h3v11.5h-3V9Zm5.5 0h2.9v1.6h0c.4-.8 1.4-1.6 2.9-1.6 3.1 0 3.7 2 3.7 4.7v6.8h-3v-6c0-1.4 0-3.3-2-3.3s-2.3 1.6-2.3 3.2v6.1H9V9Z" fill="currentColor"/></svg></a>
+        <a class="soc sig" href="https://www.instagram.com/codata.cl/" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram @codata.cl"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.2" cy="6.8" r="1.3" fill="currentColor"/></svg></a>
+        <a class="soc stk" href="https://www.tiktok.com/@codata.cl" target="_blank" rel="noopener" aria-label="TikTok" title="TikTok @codata.cl"><svg viewBox="0 0 24 24"><path d="M16.8 3c.4 2 1.7 3.5 3.7 3.8v3c-1.5 0-2.8-.5-3.8-1.2v6.2A5.9 5.9 0 1 1 10 9v3.2a2.8 2.8 0 1 0 3.6 2.7V3h3.2Z" fill="currentColor"/></svg></a>
+        <a class="soc sml" href="mailto:contacto@co-data.cl" aria-label="Correo" title="contacto@co-data.cl"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="m4 7 8 6 8-6" fill="none" stroke="currentColor" stroke-width="2"/></svg></a>
+      </div>
     </div>
   </div>
 </footer>
@@ -1088,7 +1125,7 @@ if(!rmq){
     if(!dragging){ringVel+=(baseVel-ringVel)*(Math.abs(ringVel)>1.5?.03:.014);ringAng+=ringVel;}
     tilt+=(tTilt-tilt)*.06;
     var sc=Math.min(window.scrollY||0,420);
-    fan.style.transform='translateY('+(sc*.14)+'px) rotateX('+(tilt-sc*.012)+'deg) rotateY('+(ringAng+tYaw)+'deg)';
+    fan.style.transform=LITE?('rotateX(-6deg) rotateY('+ringAng+'deg)'):('translateY('+(sc*.14)+'px) rotateX('+(tilt-sc*.012)+'deg) rotateY('+(ringAng+tYaw)+'deg)');
     requestAnimationFrame(loop);
   })();
 }else{fan.style.transform='rotateX(-7deg)';}
@@ -1487,6 +1524,36 @@ function visOpen(){vis.classList.add('open');vis.setAttribute('aria-hidden','fal
 function visClose(){vis.classList.remove('open');vis.setAttribute('aria-hidden','true');syncLock();}
 function leyOpen(){leyx.classList.add('open');leyx.setAttribute('aria-hidden','false');syncLock();setTimeout(function(){document.getElementById('leyX').focus();},90);}
 function leyClose(){leyx.classList.remove('open');leyx.setAttribute('aria-hidden','true');syncLock();}
+/* ===== botón ATRÁS del celular cierra lo abierto (no saca de la página) ===== */
+(function(){
+  function anyOpen(){return (mbg&&mbg.classList.contains('open'))||document.getElementById('cat').classList.contains('open')||vis.classList.contains('open')||leyx.classList.contains('open');}
+  function closeAll(){
+    if(mbg&&mbg.classList.contains('open'))closeP();
+    var c=document.getElementById('cat'); if(c.classList.contains('open'))closeCat();
+    if(vis.classList.contains('open'))visClose();
+    if(leyx.classList.contains('open'))leyClose();
+    var nd=document.getElementById('nodo'); if(nd&&nd.classList.contains('open'))nd.classList.remove('open');
+  }
+  addEventListener('popstate',function(){if(anyOpen())closeAll();});
+  /* menú móvil */
+  var mm=document.getElementById('mmenu'),md=document.getElementById('mdrop');
+  if(mm&&md){
+    mm.addEventListener('click',function(e){e.stopPropagation();mm.classList.toggle('on');md.classList.toggle('on');});
+    document.addEventListener('click',function(e){if(md.classList.contains('on')&&!md.contains(e.target)&&e.target!==mm){md.classList.remove('on');mm.classList.remove('on');}});
+    md.querySelectorAll('a').forEach(function(a2){a2.addEventListener('click',function(ev){
+      var g=a2.getAttribute('data-go');md.classList.remove('on');mm.classList.remove('on');
+      if(g==='cat'){ev.preventDefault();openCat();}
+      else if(g==='vis'){ev.preventDefault();visOpen();}
+      else if(g==='ley'){ev.preventDefault();leyOpen();}
+    });});
+  }
+  function mark(){try{history.pushState({ov:1},'');}catch(e){}}
+  var _oc=openCat;openCat=function(){_oc();mark();};
+  var _op=openP;openP=function(i,e){_op(i,e);mark();};
+  var _og=openC;openC=function(i,e){_og(i,e);mark();};
+  var _ov=visOpen;visOpen=function(){_ov();mark();};
+  var _ol=leyOpen;leyOpen=function(){_ol();mark();};
+})();
 document.getElementById('navVis').addEventListener('click',function(e){e.preventDefault();visOpen();});
 document.getElementById('visX').addEventListener('click',visClose);
 document.getElementById('footVis').addEventListener('click',function(e){e.preventDefault();visOpen();});
