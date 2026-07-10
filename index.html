@@ -575,6 +575,17 @@ section>.wrap{position:relative;z-index:1}
   .cat-head{position:sticky;top:0;z-index:30;background:var(--bg);box-shadow:0 8px 24px rgba(0,0,0,.35)}
   #catX{width:42px;height:42px}
 }
+/* MODO LIGERO v2: máxima velocidad en móvil */
+.lite .card{box-shadow:none!important}
+.lite .cin *{animation:none!important}
+.lite .card .mws{display:none}
+.lite .card{transition:transform .3s ease}
+/* espacio real entre rueda y textos (móvil) */
+@media(max-width:760px){
+  .stage{height:315px!important;margin-top:12px!important;margin-bottom:10px}
+  .hint{margin-top:16px}
+  .wnote{margin:14px 22px 0;font-size:11.5px}
+}
 /* ===== NODO ===== */
 #nodoBtn{position:fixed;right:18px;bottom:18px;z-index:145;width:58px;height:58px;border-radius:50%;background:var(--btn);color:var(--btnink);border:none;cursor:pointer;box-shadow:0 14px 36px rgba(0,0,0,.3);display:grid;place-items:center;transition:.25s}
 #nodoBtn:hover{transform:scale(1.07)}
@@ -660,7 +671,7 @@ section>.wrap{position:relative;z-index:1}
       <span class="hline h1"><span>Transformamos su negocio</span></span>
       <span class="hline h2"><span>en una <em class="xp" style="font-style:normal">experiencia.</em></span></span>
     </h1>
-    <p class="hsub rv">Digitalizamos y automatizamos empresas y pymes en Chile — agenda, ventas, cobranza, terreno y cumplimiento. <b>Cada solución la ve funcionando con su marca antes de decidir.</b></p>
+    <p class="hsub rv">Su negocio vendiendo, agendando y cobrando <b>solo</b> — las 24 horas, los 7 días. Y antes de decidir, <b>lo ve funcionando con su marca.</b></p>
     <div class="hcta rv"><button class="bigpill hoverable mag" type="button" onclick="openCat()">Abrir el álbum — 83 modelos →</button><a class="ghostpill hoverable" href="#vivo">Ver la IA trabajando</a></div>
     <div class="stage" id="stage">
       <div class="fan" id="fan"></div>
@@ -668,7 +679,7 @@ section>.wrap{position:relative;z-index:1}
   </div>
   <div class="cta-row">
     <div class="hint">Gire la rueda — pinche una carta y se abre</div>
-    <p class="wnote">💡 Las demos son <b>versiones básicas de muestra</b>, para que se haga una idea — su solución final se construye <b>a medida</b> sobre esta base.</p>
+    <p class="wnote">Cada demo es el <b>punto de partida</b>: una muestra básica para hacerse la idea. Su versión final se construye <b>a medida</b> — con su marca, sus datos y sus procesos.</p>
   </div>
 </header>
 
@@ -688,10 +699,10 @@ section>.wrap{position:relative;z-index:1}
   <div class="f3d ftow" aria-hidden="true"><span class="tw t1"></span><span class="tw t2"></span><span class="tw t3"></span><span class="tw t4"></span><span class="tw t5"></span></div>
   <div class="wrap">
     <div class="ribbon rv">
-      <div class="rb"><b>83+</b><span>modelos listos para operar con su marca</span></div>
-      <div class="rb"><b>35</b><span>demos en vivo — pruébelas ahora mismo</span></div>
-      <div class="rb"><b>19</b><span>líneas de solución para toda su operación</span></div>
-      <div class="rb"><b>24/7</b><span>atención con IA, también cuando descansa</span></div>
+      <div class="rb"><b>83+</b><span>soluciones listas para operar con su marca</span></div>
+      <div class="rb"><b>35</b><span>demos en vivo — tóquelas y pruébelas ahora</span></div>
+      <div class="rb"><b>19</b><span>áreas de su negocio cubiertas de punta a punta</span></div>
+      <div class="rb"><b>24/7</b><span>su empresa atiende, incluso mientras usted duerme</span></div>
     </div>
     <h2 class="k">Lo que cambia</h2>
     <div class="stats">
@@ -846,7 +857,7 @@ section>.wrap{position:relative;z-index:1}
 <div id="cat" role="dialog" aria-modal="true" aria-label="Catálogo de servicios" aria-hidden="true">
   <div class="cat-head">
     <div class="in"><h2>El Álbum CO-DATA — <b>83 láminas</b> · Colección 2026</h2>
-    <p class="catnote">Las demos son versiones básicas de muestra — cada solución final se construye a medida para su negocio.</p><button id="catX" aria-label="Cerrar">✕</button></div>
+    <p class="catnote">Cada lámina es una solución real. Las demos son muestras básicas — la versión final se construye a medida para su negocio.</p><button id="catX" aria-label="Cerrar">✕</button></div>
     <div class="chips" id="chips"></div>
   </div>
   <div class="cat-grid" id="catGrid"></div>
@@ -1043,7 +1054,7 @@ function holoIC(n){
 var fan=document.getElementById('fan');
 var LITE=matchMedia('(max-width:820px)').matches||(navigator.hardwareConcurrency&&navigator.hardwareConcurrency<=4);
 if(LITE)document.documentElement.classList.add('lite');
-var RING=P.slice(0,LITE?10:15);
+var RING=P.slice(0,LITE?8:15);
 RING.forEach(function(p,i){
   var b=document.createElement('button');
   b.className='card hoverable '+p.g;
@@ -1057,8 +1068,8 @@ RING.forEach(function(p,i){
 
 /* ================= EFECTO 1: parallax del abanico ================= */
 var stage=document.getElementById('stage'), rmq=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-var ringAng=0, ringVel=.14, baseVel=.14, tilt=-7, tTilt=-7, tYaw=0, dragging=null, dragged=false;
-function setR(){var R=Math.min(Math.max(innerWidth*.30,222),392);document.documentElement.style.setProperty('--ringR',R+'px');}
+var ringAng=0, ringVel=LITE?.1:.14, baseVel=LITE?.1:.14, tilt=-7, tTilt=-7, tYaw=0, dragging=null, dragged=false;
+function setR(){var R=Math.min(Math.max(innerWidth*.30,222),392);if(LITE)R=Math.min(R,182);document.documentElement.style.setProperty('--ringR',R+'px');}
 setR();addEventListener('resize',setR);
 if(!rmq){
   if(matchMedia('(pointer:fine)').matches){
@@ -1551,8 +1562,10 @@ var __botsOn=true;
   function rs(){W=cv.width=innerWidth;H=cv.height=innerHeight;}
   rs();addEventListener('resize',rs);
   var NP=document.documentElement.classList.contains("lite")?20:55;for(var i=0;i<NP;i++)Ps.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:1.4+Math.random()*3,vx:(Math.random()-.5)*.24,vy:(Math.random()-.5)*.2,c:COLS[i%6],a:.16+Math.random()*.14});
+  var __fSkip=false;
   (function draw(){
     if(document.hidden){requestAnimationFrame(draw);return;}
+    if(document.documentElement.classList.contains('lite')){__fSkip=!__fSkip;if(__fSkip){requestAnimationFrame(draw);return;}}
     ctx.clearRect(0,0,W,H);
     for(var k=0;k<Ps.length;k++){var p=Ps[k];
       p.x+=p.vx;p.y+=p.vy;
