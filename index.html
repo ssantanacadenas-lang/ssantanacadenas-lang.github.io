@@ -615,6 +615,12 @@ section>.wrap{position:relative;z-index:1}
 #mdrop a{padding:14px 16px;color:var(--ink);text-decoration:none;font-size:14.5px;border-radius:12px;transition:.2s}
 #mdrop a:active,#mdrop a:hover{background:rgba(255,255,255,.08)}
 @media(max-width:620px){#mmenu{display:flex}}
+/* demo completa e interactiva dentro del modal (móvil) */
+@media(max-width:760px){
+  #mprev{height:58vh}
+  #mfr{width:100%;height:100%;transform:none;pointer-events:auto}
+  .mtag{display:none}
+}
 /* ===== NODO ===== */
 #nodoBtn{position:fixed;right:18px;bottom:18px;z-index:145;width:58px;height:58px;border-radius:50%;background:var(--btn);color:var(--btnink);border:none;cursor:pointer;box-shadow:0 14px 36px rgba(0,0,0,.3);display:grid;place-items:center;transition:.25s}
 #nodoBtn:hover{transform:scale(1.07)}
@@ -1098,7 +1104,7 @@ var RING=P.slice(0,LITE?6:15);
 RING.forEach(function(p,i){
   var b=document.createElement('button');
   b.className='card hoverable '+p.g;
-  b.style.setProperty('--ry',(i*24)+'deg');
+  b.style.setProperty('--ry',(i*(360/RING.length))+'deg');
   b.setAttribute('aria-label',p.n);
   var rl='';(p.rel||[]).slice(0,3).forEach(function(r){rl+='<span class="mw '+r.ic+'"></span>';});
   b.innerHTML='<span class="cin '+p.g+'">'+holoIC(p.n)+'<span class="ck">'+p.k+'</span><span class="mws" aria-hidden="true">'+rl+'</span><span class="cn">'+p.n+'<small>'+p.o+'</small></span></span><span class="cfoil" style="--sd:'+(i*.55)+'s"></span>';
@@ -1109,7 +1115,7 @@ RING.forEach(function(p,i){
 /* ================= EFECTO 1: parallax del abanico ================= */
 var stage=document.getElementById('stage'), rmq=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 var ringAng=0, ringVel=LITE?.1:.14, baseVel=LITE?.1:.14, tilt=-7, tTilt=-7, tYaw=0, dragging=null, dragged=false;
-function setR(){var R=Math.min(Math.max(innerWidth*.30,222),392);if(LITE)R=205;document.documentElement.style.setProperty('--ringR',R+'px');}
+function setR(){var R=Math.min(Math.max(innerWidth*.30,222),392);if(LITE)R=218;document.documentElement.style.setProperty('--ringR',R+'px');}
 setR();addEventListener('resize',setR);
 if(!rmq){
   if(matchMedia('(pointer:fine)').matches){
