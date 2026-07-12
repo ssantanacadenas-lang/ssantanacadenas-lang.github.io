@@ -1846,11 +1846,13 @@ function showM(p,e){
   var _rw=document.getElementById('mrel');
   if(_rw){ if(p.rel&&p.rel.length){ _rw.style.display='';
     _rw.innerHTML='<div class="mrt">Vea también — toque para cambiar la demo en pantalla:</div><div class="mrg">'+p.rel.map(function(r){return '<button class="mrb" data-f="'+r.f+'"><span class="mwv '+r.ic+'"></span><span>'+r.t+'</span></button>';}).join('')+'</div>';
-    Array.prototype.forEach.call(_rw.querySelectorAll('.mrb'),function(btn){btn.addEventListener('click',function(){var f=btn.getAttribute('data-f');var fr=document.getElementById('mfr');if(fr)fr.src=f;var md=document.getElementById('mdemo');if(md)md.href=f;Array.prototype.forEach.call(_rw.querySelectorAll('.mrb'),function(b2){b2.classList.remove('on');});btn.classList.add('on');});});
+    Array.prototype.forEach.call(_rw.querySelectorAll('.mrb'),function(btn){btn.addEventListener('click',function(){var f=btn.getAttribute('data-f');var fr=document.getElementById('mfr');if(fr){fr.style.display='';fr.src=f;}var ph=document.getElementById('mnodemo');if(ph)ph.style.display='none';var mt=document.querySelector('#mprev .mtag');if(mt)mt.style.display='';var md=document.getElementById('mdemo');if(md){md.style.display='';md.href=f;}Array.prototype.forEach.call(_rw.querySelectorAll('.mrb'),function(b2){b2.classList.remove('on');});btn.classList.add('on');});});
   } else {_rw.style.display='none';_rw.innerHTML='';} }
   var _md=document.getElementById('mdemo'); _md.style.display=''; _md.href=p.demo;
   var _pv=document.getElementById('mprev'); if(_pv)_pv.style.display='';
-  var _fr=document.getElementById('mfr'); if(_fr){_fr.src=p.demo;}
+  var _fr=document.getElementById('mfr'); if(_fr){_fr.style.display='';_fr.src=p.demo;}
+  var _ph=document.getElementById('mnodemo'); if(_ph)_ph.style.display='none';
+  var _mt=document.querySelector('#mprev .mtag'); if(_mt)_mt.style.display='';
   document.getElementById('mwa').href='https://wa.me/56957898782?text='+encodeURIComponent('Hola CO-DATA, quiero cotizar «'+p.n+'».');
   if(rmq){mbg.classList.add('open');return;}
   wipe.style.background=p.grad;
@@ -2022,9 +2024,10 @@ function openC(i,e){
   document.getElementById('mchips').innerHTML='<span class="mc">'+p.c+'</span><span class="mc">Implementación de cero a cien</span><span class="mc">Soporte continuo</span>';
   var md=document.getElementById('mdemo'), pv=document.getElementById('mprev'), fr=document.getElementById('mfr');
   var ph=document.getElementById('mnodemo');
-  if(p.f){md.style.display='';md.href=p.f;pv.style.display='';fr.style.display='';fr.src=p.f;if(ph)ph.style.display='none';}
+  var mt=document.querySelector('#mprev .mtag');
+  if(p.f){md.style.display='';md.href=p.f;pv.style.display='';fr.style.display='';fr.src=p.f;if(ph)ph.style.display='none';if(mt)mt.style.display='';}
   else{md.style.display='none';pv.style.display='';fr.style.display='none';if(fr)fr.src='';
-    if(ph){ph.style.display='flex';ph.style.background=p.grad;}}
+    if(ph){ph.style.display='flex';ph.style.background=p.grad;}if(mt)mt.style.display='none';}
   document.getElementById('mwa').href='https://wa.me/56957898782?text='+encodeURIComponent('Hola CO-DATA, quiero cotizar \u00ab'+p.n+'\u00bb.');
   if(rmq){mbg.classList.add('open');return;}
   wipe.style.background=p.grad;
@@ -2471,6 +2474,7 @@ RING.forEach(function(p,i){
     +'<a href="#" aria-label="Ver solución: '+p.n+'">Ver solución</a>';
   el.addEventListener('click',function(e){
     e.preventDefault();
+    if(gMoved){gMoved=false;return;}
     var ci=gIndex();
     if(ci!==i){gGoTo(i);return;}
     if(p.demo==='#cat'){openCat();return;}
@@ -2570,14 +2574,16 @@ function gTick(){
   requestAnimationFrame(gTick);
 }
 
+var gMoved=false, gStartX=0;
 gscene.addEventListener('pointerdown',function(e){
-  gdragging=true; gidle=false; glastX=e.clientX; gsnap=null; gvel=0;
-  gscene.classList.add('grabbing'); gscene.setPointerCapture(e.pointerId);
+  gdragging=true; gMoved=false; gidle=false; gStartX=glastX=e.clientX; gsnap=null; gvel=0;
+  gscene.classList.add('grabbing');
   glastInteract=performance.now();
 });
-gscene.addEventListener('pointermove',function(e){
+window.addEventListener('pointermove',function(e){
   if(!gdragging)return;
   var dx=e.clientX-glastX; glastX=e.clientX;
+  if(Math.abs(e.clientX-gStartX)>7)gMoved=true;
   grot+=dx*0.28; gvel=dx*0.28;
   glastInteract=performance.now();
 });
@@ -2587,8 +2593,8 @@ function gEndDrag(){
   if(Math.abs(gvel)<0.5) gsnap=Math.round(grot/GSTEP)*GSTEP;
   glastInteract=performance.now();
 }
-gscene.addEventListener('pointerup',gEndDrag);
-gscene.addEventListener('pointercancel',gEndDrag);
+window.addEventListener('pointerup',gEndDrag);
+window.addEventListener('pointercancel',gEndDrag);
 
 gscene.addEventListener('wheel',function(e){
   e.preventDefault(); gidle=false;
